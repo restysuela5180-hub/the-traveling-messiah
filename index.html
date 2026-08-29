@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>The Traveling Messiah | 2TM Project</title>
+
+    <meta name="description"
+        content="The Traveling Messiah — a mission of faith, service, journey, and hope.">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Georgia, "Times New Roman", serif;
+            background: #f5f2ea;
+            color: #222;
+            line-height: 1.6;
+        }
+
+
+        /* =========================
+           NAVIGATION
+        ========================= */
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(20, 20, 20, 0.96);
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+        }
+
+        nav {
+            max-width: 1100px;
+            margin: auto;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.35rem;
+            font-weight: bold;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: #4da6ff;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: #4da6ff;
+        }
+
+
+        /* =========================
+           HERO
+        ========================= */
+
+       .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 100px 30px 60px;
+
+    background: #151515;
+    color: white;
+}
+
+.hero-content {
+    max-width: 1150px;
+    width: 100%;
+    margin: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+}
+
+.hero-text {
+    flex: 1;
+    text-align: left;
+}
+
+.hero-text h1 {
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    line-height: 1;
+    margin-bottom: 15px;
+}
+
+.hero-text .subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+    color: #4da6ff;
+    font-weight: bold;
+}
+
+.hero-text .mission-line {
+    max-width: 600px;
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.hero-image img {
+    width: 100%;
+    max-width: 520px;
+    height: auto;
+    display: block;
+}
+
+        .btn {
+            display: inline-block;
+            padding: 14px 30px;
+            margin: 6px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-primary {
+            background: #4da6ff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2185df;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            border: 2px solid white;
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: #222;
+        }
+
+
+        /* =========================
+           GENERAL SECTIONS
+        ========================= */
+
+        section {
+            padding: 80px 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 45px;
+        }
+
+        .section-title h2 {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            max-width: 700px;
+            margin: auto;
+            color: #666;
+        }
+
+
+        /* =========================
+           MISSION
+        ========================= */
+
+        .mission {
+            background: white;
+        }
+
+        .mission-content {
+            max-width: 850px;
+            margin: auto;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .mission-content p {
+            margin-bottom: 20px;
+        }
+
+        .mission-quote {
+            margin: 35px auto;
+            padding: 25px;
+            border-left: 4px solid #4da6ff;
+            background: #f5f5f5;
+            font-size: 1.3rem;
+            font-style: italic;
+        }
+
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px 25px;
+            text-align: center;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #666;
+        }
+
+
+        /* =========================
+           EBOOK
+        ========================= */
+
+        .ebook {
+            background: #222;
+            color: white;
+            text-align: center;
+        }
+
+        .ebook .section-title p {
+            color: #ccc;
+        }
+
+        .ebook-box {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .ebook-box h3 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .ebook-box p {
+            margin-bottom: 25px;
+            color: #ddd;
+        }
+
+
+        /* =========================
+           JOURNEY
+        ========================= */
+
+        .journey {
+            background: #f5f2ea;
+        }
+
+        .journey-text {
+            max-width: 850px;
+            margin: auto;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+
+        /* =========================
+           SUPPORT
+        ========================= */
+
+        .support {
+            background: white;
+            text-align: center;
+        }
+
+        .support-content {
+            max-width: 750px;
+            margin: auto;
+        }
+
+        .support-content p {
+            margin-bottom: 25px;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            background: #151515;
+            color: #ccc;
+            text-align: center;
+            padding: 35px 20px;
+        }
+
+        footer h3 {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        .footer-small {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+       @media (max-width: 800px) {
+
+    .nav-links {
+        display: none;
+    }
+
+    nav {
+        justify-content: center;
+    }
+
+    .hero {
+        padding-top: 100px;
+    }
+
+    .hero-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero-text {
+        text-align: center;
+        order: 1;
+    }
+
+    .hero-image {
+        order: 2;
+    }
+
+    .hero-text h1 {
+        font-size: 3.2rem;
+    }
+
+    .hero-text .mission-line {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-image img {
+        max-width: 400px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    section {
+        padding: 65px 18px;
+    }
+}
+
+    </style>
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<header>
+
+    <nav>
+
+        <a href="#home" class="logo">
+            <span>2TM</span> PROJECT
+        </a>
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="#mission">Mission</a>
+            </li>
+
+            <li>
+                <a href="#journey">Journey</a>
+            </li>
+
+            <li>
+                <a href="#ebook">eBook</a>
+            </li>
+
+            <li>
+                <a href="#projects">Projects</a>
+            </li>
+
+            <li>
+                <a href="#about">About</a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+</header>
+
+
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="hero" id="home">
+
+    <div class="hero-content">
+
+        <div class="hero-text">
+
+            <h1>
+                The Traveling Messiah
+            </h1>
+
+            <p class="subtitle">
+                2TM PROJECT
+            </p>
+
+            <p class="mission-line">
+                A journey of faith, service, hope, and love —
+                bringing Christ closer to people wherever
+                the journey leads.
+            </p>
+
+            <a href="#mission" class="btn btn-primary">
+                ENTER THE JOURNEY
+            </a>
+
+            <a href="#ebook" class="btn btn-outline">
+                READ THE eBOOK
+            </a>
+
+        </div>
+
+
+        <div class="hero-image">
+
+            <img
+                src="cover.png"
+                alt="The Traveling Messiah - 2TM Project"
+            >
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     MISSION
+========================= -->
+
+<section class="mission" id="mission">
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <h2>The Mission</h2>
+
+            <p>
+                A mission that travels beyond places,
+                boundaries, and screens.
+            </p>
+
+        </div>
+
+
+        <div class="mission-content">
+
+            <p>
+                The Traveling Messiah is a missionary journey
+                inspired by Jesus Christ — the Messiah who
+                walked among people, served them, taught them,
+                healed them, and brought hope to those who were
+                searching for God.
+            </p>
+
+            <p>
+                The 2TM Project seeks to continue that journey
+                through words, actions, service, technology,
+                travel, and encounters with people.
+            </p>
+
+            <div class="mission-quote">
+
+                "The journey belongs to Him.
+                I am only His servant."
+
+            </div>
+
+            <p>
+                From the streets to the digital world,
+                the mission is simple:
+                <strong>bring Christ closer to people.</strong>
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     JOURNEY
+========================= -->
+
+<section class="journey" id="journey">
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <h2>The Journey</h2>
+
+            <p>
+                Every mission begins with a journey.
+            </p>
+
+        </div>
+
+
+        <div class="journey-text">
+
+            <p>
+                The Traveling Messiah began as a calling carried
+                from childhood and slowly became clearer through
+                the experiences of life.
+            </p>
+
+            <br>
+
+            <p>
+                Through struggles, work, service, faith,
+                community, and encounters with people,
+                the journey continued to take shape.
+            </p>
+
+            <br>
+
+            <p>
+                Today, that journey continues through the
+                2TM Project.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     PROJECTS
+========================= -->
+
+<section id="projects">
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <h2>Mission Projects</h2>
+
+            <p>
+                Faith becomes meaningful when it becomes
+                service.
+            </p>
+
+        </div>
+
+
+        <div class="cards">
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    ❤️
+                </div>
+
+                <h3>
+                    Community Service
+                </h3>
+
+                <p>
+                    Reaching people who are hungry,
+                    struggling, forgotten, or searching
+                    for hope.
+                </p>
+
+            </div>
+
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    🚐
+                </div>
+
+                <h3>
+                    Traveling Mission
+                </h3>
+
+                <p>
+                    Bringing the mission beyond the walls
+                    and into communities, streets,
+                    and distant places.
+                </p>
+
+            </div>
+
+
+
+            <div class="card">
+
+                <div class="card-icon">
+                    🌐
+                </div>
+
+                <h3>
+                    Digital Mission
+                </h3>
+
+                <p>
+                    Using the internet, social media,
+                    eBooks, and emerging technology to
+                    reach people wherever they are.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     EBOOK
+========================= -->
+
+<section class="ebook" id="ebook">
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <h2>The Traveling Messiah</h2>
+
+            <p>
+                The story behind the journey.
+            </p>
+
+        </div>
+
+
+        <div class="ebook-box">
+
+            <h3>
+                The Traveling Messiah
+            </h3>
+
+            <p>
+                A personal journey of calling, faith,
+                struggle, service, and discovering
+                God's purpose.
+            </p>
+
+            <!--
+            Later we will connect this button
+            to your actual flipbook.
+            -->
+
+            <a href="flipbook_BACKUP_original.html"
+               class="btn btn-primary">
+
+                OPEN THE eBOOK
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section id="about">
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <h2>About 2TM</h2>
+
+            <p>
+                The Traveling Messiah Project
+            </p>
+
+        </div>
+
+
+        <div class="journey-text">
+
+            <p>
+                The 2TM Project is a growing missionary
+                vision centered on Jesus Christ and the
+                call to serve people.
+            </p>
+
+            <br>
+
+            <p>
+                It is a mission that can travel physically
+                through communities and digitally through
+                the World Wide Web.
+            </p>
+
+            <br>
+
+            <p>
+                The journey may begin with one person,
+                but the hope is that it will touch many
+                lives.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     SUPPORT
+========================= -->
+
+<section class="support">
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <h2>Be Part of the Journey</h2>
+
+        </div>
+
+
+        <div class="support-content">
+
+            <p>
+                The journey continues.
+            </p>
+
+            <p>
+                You can pray, serve, share, volunteer,
+                support a mission project, or simply
+                walk with us on the journey.
+            </p>
+
+            <a href="#contact"
+               class="btn btn-primary">
+
+                CONTACT THE PROJECT
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     CONTACT
+========================= -->
+
+<section id="contact">
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <h2>Contact</h2>
+
+            <p>
+                The journey continues.
+            </p>
+
+        </div>
+
+
+        <div class="journey-text">
+
+            <p>
+                More contact information and social media
+                links will be added here.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    <h3>
+        The Traveling Messiah
+    </h3>
+
+    <p>
+        2TM Project
+    </p>
+
+    <p>
+        A journey of faith, service, hope, and love.
+    </p>
+
+    <p class="footer-small">
+        © 2026 The Traveling Messiah Project
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>
