@@ -1,164 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>The Traveling Messiah</title>
-
+<title>The Traveling Messiah - Flip Ebook</title>
 <style>
-
-body {
-    margin: 0;
-    background: #222;
-    font-family: Georgia, serif;
-    text-align: center;
+:root {
+  --paper:#f4e7c9; --edge:#d3b783; --ink:#261b12; --gold:#c69b48;
+  --page-w:min(43vw,560px); --page-h:min(76vh,820px); --speed:900ms;
 }
-
-h1 {
-    color: #222;
-}
-
-.book {
-    width: 90%;
-    max-width: 700px;
-    margin: 30px auto;
-}
-
-.page {
-    background: white;
-    min-height: 500px;
-    padding: 45px 60px;
-    box-sizing: border-box;
-    display: none;
-    overflow-y: auto;
-}
-
-.page.active {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-}
-
-.page h1 {
-    font-size: 32px;
-    margin-bottom: 25px;
-}
-
-.page h2 {
-    font-size: 28px;
-    margin-bottom: 25px;
-}
-
-.page p {
-    font-size: 18px;
-    line-height: 1.55;
-    text-align: left;
-    margin-bottom: 18px;
-}
-
-.cover {
-    width: 280px;
-    max-width: 80%;
-}
-
-button {
-    padding: 12px 25px;
-    margin: 10px;
-    font-size: 18px;
-}
-
+*{box-sizing:border-box} html,body{min-height:100%}
+body{margin:0;color:var(--ink);background:radial-gradient(circle at 50% 8%,rgba(198,155,72,.18),transparent 34%),linear-gradient(135deg,#080706,#1d1611 55%,#090706);font-family:Georgia,"Times New Roman",serif;overflow-x:hidden}
+.reader{min-height:100vh;display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:14px}
+.reader-header{display:flex;align-items:center;justify-content:space-between;gap:16px;width:min(1140px,96vw);margin:auto;color:#f5e8ca}
+.reader-header h1{margin:0;font-size:clamp(1.1rem,3vw,1.65rem)} .reader-header p{margin:0;color:#d8c7a4;font-size:.9rem}
+.stage{min-height:0;display:grid;place-items:center;perspective:2600px;overflow:visible}
+.book{position:relative;width:calc(var(--page-w)*2);height:var(--page-h);min-height:500px;transform-style:preserve-3d;transition:transform .55s ease;filter:drop-shadow(0 22px 25px rgba(0,0,0,.52))}
+.book.closed{transform:translateX(calc(var(--page-w)/-2))}
+.book::before{content:"";position:absolute;inset:-9px;z-index:-5;border:2px solid #5e4327;border-radius:12px;background:#3a2618}
+.book.closed::before{left:50%}
+.gutter{position:absolute;inset:0 auto 0 50%;width:24px;z-index:9999;transform:translateX(-50%);pointer-events:none;background:linear-gradient(90deg,transparent,rgba(42,23,10,.28),rgba(255,255,255,.12),rgba(42,23,10,.27),transparent)}
+.sheet{position:absolute;top:0;left:50%;width:var(--page-w);height:100%;transform-origin:left center;transform-style:preserve-3d;transition:transform var(--speed) cubic-bezier(.45,.04,.18,1);will-change:transform}
+.sheet.turned{transform:rotateY(-180deg)}
+.face{position:absolute;inset:0;overflow-y:auto;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--paper);border:1px solid var(--edge);box-shadow:inset 0 0 28px rgba(104,70,29,.13)}
+.front{border-radius:2px 10px 10px 2px;background:linear-gradient(90deg,rgba(72,43,18,.19),transparent 7%,transparent 96%,rgba(72,43,18,.12)),var(--paper)}
+.back{transform:rotateY(180deg);border-radius:10px 2px 2px 10px;background:linear-gradient(90deg,rgba(72,43,18,.11),transparent 5%,transparent 93%,rgba(72,43,18,.21)),var(--paper)}
+.page-content{min-height:100%;padding:clamp(26px,3.1vw,48px);position:relative;padding-bottom:62px}
+.page-content h1,.page-content h2,.page-content h3{color:#2f2015;text-wrap:balance}.page-content h1{font-size:clamp(1.5rem,3vw,2.25rem);margin:0 0 24px}.page-content h2{font-size:clamp(1.3rem,2.6vw,1.85rem);margin:0 0 22px}.page-content h3{font-size:clamp(1.1rem,2.2vw,1.55rem);text-align:center}.page-content p{font-size:clamp(.92rem,1.45vw,1.06rem);line-height:1.6;text-align:left;margin:0 0 1em}.page-content img{max-width:100%;height:auto}.cover{width:min(330px,85%);max-height:55vh;object-fit:contain}
+.page-number{position:absolute;bottom:20px;left:0;right:0;text-align:center;color:#654a2b;font-size:.84rem;font-variant-numeric:tabular-nums}
+.blank{height:100%;background:var(--paper)}
+.controls{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;color:#f5e8ca}button{border:1px solid #876a38;border-radius:999px;background:#f1dfb9;color:#2b1c11;font:600 1rem Georgia,serif;padding:10px 18px;cursor:pointer;min-width:116px}button:hover:not(:disabled){background:#fff2d3;transform:translateY(-1px)}button:disabled{opacity:.4;cursor:not-allowed}.progress{min-width:155px;text-align:center;font-variant-numeric:tabular-nums}.hint{color:#c9b58e;font-size:.82rem;width:100%;margin:0;text-align:center}
+@media(max-width:620px){:root{--page-w:92vw;--page-h:75vh}.reader{padding:8px}.reader-header p{display:none}.book{width:var(--page-w);min-height:470px}.book,.book.closed{transform:none}.book::before,.book.closed::before{inset:-7px}.sheet{left:0}.gutter{display:none}.page-content{padding:27px 22px 58px}button{min-width:104px;padding:9px 14px}}
+@media(prefers-reduced-motion:reduce){.sheet{transition-duration:.01ms}.book{transition-duration:.01ms}}
 </style>
-
-<style>
-
-body {
-    margin: 0;
-    background: #0a0909;
-    font-family: Georgia, serif;
-    text-align: center;
-}
-
-h1 {
-    color: #080808;
-}
-
-.book {
-    width: 90%;
-    max-width: 700px;
-    margin: 30px auto;
-}
-
-.page {
-    background: hwb(32 4% 25% / 0.911);
-    min-height: 500px;
-    padding: 45px 60px;
-    box-sizing: border-box;
-    display: none;
-    overflow-y: auto;
-}
-
-.page.active {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-}
-
-.page h1 {
-    font-size: 32px;
-    margin-bottom: 25px;
-}
-
-.page h2 {
-    font-size: 28px;
-    margin-bottom: 25px;
-}
-
-.page h3 {
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.page p {
-    font-size: 18px;
-    line-height: 1.55;
-    text-align: left;
-    margin-bottom: 18px;
-}
-
-.cover {
-    width: 280px;
-    max-width: 80%;
-}
-
-button {
-    padding: 12px 25px;
-    margin: 10px;
-    font-size: 18px;
-}
-
-</style>
-
 </head>
-
 <body>
-
-<h1>The Traveling Messiah</h1>
-
-
-<div class="book">
-
-
-<!-- PAGE 1 — COVER -->
-
-<div class="page active" id="page1">
-
-    <div>
+<div class="reader">
+  <header class="reader-header">
+    <h1>The Traveling Messiah</h1>
+    <p>Magazine-style flipbook</p>
+  </header>
+  <section class="stage">
+<main class="book closed" id="book" aria-label="The Traveling Messiah flip ebook"><div class="gutter" aria-hidden="true"></div>
+<div class="sheet" data-sheet="0"><section class="face front" aria-label="Front cover"><div class="page-content"><div>
 
         <img src="cover.png"
              class="cover"
@@ -168,16 +52,7 @@ button {
 
         <p>Digital Ebook</p>
 
-    </div>
-
-</div>
-
-
-<!-- PAGE 2 — WELCOME -->
-
-<div class="page" id="page2">
-
-    <div>
+    </div></div></section><section class="face back" aria-label="Page 1"><div class="page-content"><div>
 
         <h2>WELCOME TO THE JOURNEY</h2>
 
@@ -219,16 +94,8 @@ button {
             Welcome to the journey of The Traveling Messiah.
         </p>
 
-    </div>
-
-</div>
-
-
-<!-- PAGE 3 — TABLE OF CONTENTS -->
-
-<div class="page" id="page3">
-
-    <div>
+    </div><div class="page-number">1</div></div></section></div>
+<div class="sheet" data-sheet="1"><section class="face front" aria-label="Page 2"><div class="page-content"><div>
 
         <h1>TABLE OF CONTENTS</h1>
 
@@ -276,15 +143,7 @@ button {
 
         <p><strong>XV. Final Prayer</strong></p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 4 — PART ONE: THE CALLING -->
-
-<div class="page" id="page4">
-
-    <div>
+    </div><div class="page-number">2</div></div></section><section class="face back" aria-label="Page 3"><div class="page-content"><div>
 
         <h2>PART ONE</h2>
 
@@ -304,15 +163,8 @@ button {
 
         <p>7. When The Promise Became A Reality</p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 5 — CHAPTER 1 -->
-
-<div class="page" id="page5">
-
-    <div>
+    </div><div class="page-number">3</div></div></section></div>
+<div class="sheet" data-sheet="2"><section class="face front" aria-label="Page 4"><div class="page-content"><div>
 
         <h3>CHAPTER I</h3>
 
@@ -354,15 +206,7 @@ button {
             of Jesus beyond the limitations of physical distance.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 6 — THE MISSION THAT TRAVELS -->
-
-<div class="page" id="page6">
-
-    <div>
+    </div><div class="page-number">4</div></div></section><section class="face back" aria-label="Page 5"><div class="page-content"><div>
 
         <p>
             Through the World Wide Web, social media, and emerging
@@ -400,15 +244,8 @@ button {
         </p>
 
         
-    </div>
-
-</div>
-
-<!-- PAGE 7 — THE MISSION THAT TRAVELS -->
-
-<div class="page" id="page7">
-
-    <div>
+    </div><div class="page-number">5</div></div></section></div>
+<div class="sheet" data-sheet="3"><section class="face front" aria-label="Page 6"><div class="page-content"><div>
 
         <p>
             I do not know where every journey will lead me.
@@ -445,15 +282,7 @@ button {
             our faith.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 8 — CHAPTER 1 CONCLUSION -->
-
-<div class="page" id="page8">
-
-    <div>
+    </div><div class="page-number">6</div></div></section><section class="face back" aria-label="Page 7"><div class="page-content"><div>
 
         <p>
             The road may be physical, or it may be digital.
@@ -489,15 +318,8 @@ button {
             And behold, I am with you always, to the end of the age."  
         </P>
 
-    </div>
-
-</div>
-
-<!-- PAGE 9 — CHAPTER II -->
-
-<div class="page" id="page9">
-
-    <div>
+    </div><div class="page-number">7</div></div></section></div>
+<div class="sheet" data-sheet="4"><section class="face front" aria-label="Page 8"><div class="page-content"><div>
 
         <h3>CHAPTER II</h3>
 
@@ -528,15 +350,7 @@ button {
             and give advice.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 10 — CHAPTER II -->
-
-<div class="page" id="page10">
-
-    <div>
+    </div><div class="page-number">8</div></div></section><section class="face back" aria-label="Page 9"><div class="page-content"><div>
 
         <p>
             I did not always understand why I felt compelled to do this.
@@ -566,15 +380,8 @@ button {
             my mother a small religious booklet.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 11 — CHAPTER II -->
-
-<div class="page" id="page11">
-
-    <div>
+    </div><div class="page-number">9</div></div></section></div>
+<div class="sheet" data-sheet="5"><section class="face front" aria-label="Page 10"><div class="page-content"><div>
 
         <p>
             My mother never knew who the woman was. No one seemed
@@ -605,15 +412,7 @@ button {
             <strong>gratitude.</strong>
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 12 — CHAPTER II -->
-
-<div class="page" id="page12">
-
-    <div>
+    </div><div class="page-number">10</div></div></section><section class="face back" aria-label="Page 11"><div class="page-content"><div>
 
         <p>
             My life was not always a straight path toward God.
@@ -645,15 +444,8 @@ button {
             that I could not overcome by myself.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 13 — CHAPTER II -->
-
-<div class="page" id="page13">
-
-    <div>
+    </div><div class="page-number">11</div></div></section></div>
+<div class="sheet" data-sheet="6"><section class="face front" aria-label="Page 12"><div class="page-content"><div>
 
         <p>
             But God rescued me.
@@ -683,15 +475,7 @@ button {
             That promise became deeply rooted in my heart.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 14 — CHAPTER II -->
-
-<div class="page" id="page14">
-
-    <div>
+    </div><div class="page-number">12</div></div></section><section class="face back" aria-label="Page 13"><div class="page-content"><div>
 
         <p>
             I did not know then what that service would look like.
@@ -723,15 +507,8 @@ button {
             the suffering of others.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 15 — CHAPTER II CONCLUSION -->
-
-<div class="page" id="page15">
-
-    <div>
+    </div><div class="page-number">13</div></div></section></div>
+<div class="sheet" data-sheet="7"><section class="face front" aria-label="Page 14"><div class="page-content"><div>
 
         <p>
             And the God whom I once searched for became the God
@@ -763,15 +540,7 @@ button {
             I appointed you a prophet to the nations."
         </P>
            
-    </div>
-
-</div>
-
-<!-- PAGE 16 — CHAPTER III -->
-
-<div class="page" id="page16">
-
-    <div>
+    </div><div class="page-number">14</div></div></section><section class="face back" aria-label="Page 15"><div class="page-content"><div>
 
         <h3>CHAPTER III</h3>
 
@@ -813,15 +582,8 @@ button {
             “I will make you a teacher.”
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 17 — CHAPTER III -->
-
-<div class="page" id="page17">
-
-    <div>
+    </div><div class="page-number">15</div></div></section></div>
+<div class="sheet" data-sheet="8"><section class="face front" aria-label="Page 16"><div class="page-content"><div>
 
         <p>
             These words stayed with me.
@@ -849,15 +611,7 @@ button {
             the opportunities that came before me.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 18 — CHAPTER III -->
-
-<div class="page" id="page18">
-
-    <div>
+    </div><div class="page-number">16</div></div></section><section class="face back" aria-label="Page 17"><div class="page-content"><div>
 
         <p>
             Over time, I began to see that the things I had
@@ -884,15 +638,8 @@ button {
             the life I was trying to live.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 19 — CHAPTER III -->
-
-<div class="page" id="page19">
-
-    <div>
+    </div><div class="page-number">17</div></div></section></div>
+<div class="sheet" data-sheet="9"><section class="face front" aria-label="Page 18"><div class="page-content"><div>
 
         <p>
             Then something remarkable began to happen.
@@ -925,15 +672,7 @@ button {
             committed to doing exactly that.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 20 — CHAPTER III -->
-
-<div class="page" id="page20">
-
-    <div>
+    </div><div class="page-number">18</div></div></section><section class="face back" aria-label="Page 19"><div class="page-content"><div>
 
         <p>
             One of the clearest expressions of this calling became charity.
@@ -963,15 +702,8 @@ button {
             The person who had been rescued learned to be grateful.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 21 — CHAPTER III -->
-
-<div class="page" id="page21">
-
-    <div>
+    </div><div class="page-number">19</div></div></section></div>
+<div class="sheet" data-sheet="10"><section class="face front" aria-label="Page 20"><div class="page-content"><div>
 
         <p>
             And the person who had once asked God for another chance
@@ -1000,15 +732,7 @@ button {
             My recovery brought me closer to God.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 22 — CHAPTER III -->
-
-<div class="page" id="page22">
-
-    <div>
+    </div><div class="page-number">20</div></div></section><section class="face back" aria-label="Page 21"><div class="page-content"><div>
 
         <p>
             My prayer life revealed a calling.
@@ -1054,15 +778,8 @@ button {
             and he will make straight your paths."
         </P>
 
-    </div>
-
-</div>
-
-<!-- PAGE 23 — CHAPTER IV -->
-
-<div class="page" id="page23">
-
-    <div>
+    </div><div class="page-number">21</div></div></section></div>
+<div class="sheet" data-sheet="11"><section class="face front" aria-label="Page 22"><div class="page-content"><div>
 
         <h3>CHAPTER IV</h3>
 
@@ -1093,15 +810,7 @@ button {
             come true.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 24 — CHAPTER IV -->
-
-<div class="page" id="page24">
-
-    <div>
+    </div><div class="page-number">22</div></div></section><section class="face back" aria-label="Page 23"><div class="page-content"><div>
 
         <p>
             Our family's economic stability also declined. Our
@@ -1130,15 +839,8 @@ button {
             It was a hard battle simply to live.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 25 — CHAPTER IV -->
-
-<div class="page" id="page25">
-
-    <div>
+    </div><div class="page-number">23</div></div></section></div>
+<div class="sheet" data-sheet="12"><section class="face front" aria-label="Page 24"><div class="page-content"><div>
 
         <p>
             And beyond the struggles of daily life, I also felt the
@@ -1173,15 +875,7 @@ button {
             “Live.”
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 26 — CHAPTER IV -->
-
-<div class="page" id="page26">
-
-    <div>
+    </div><div class="page-number">24</div></div></section><section class="face back" aria-label="Page 25"><div class="page-content"><div>
 
         <p>
             At first, I thought the word simply meant surviving.
@@ -1214,15 +908,8 @@ button {
             I was alive.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 27 — CHAPTER IV -->
-
-<div class="page" id="page27">
-
-    <div>
+    </div><div class="page-number">25</div></div></section></div>
+<div class="sheet" data-sheet="13"><section class="face front" aria-label="Page 26"><div class="page-content"><div>
 
         <p>
             And if God had allowed me to come through those difficult
@@ -1251,15 +938,7 @@ button {
             placed before me.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 28 — CHAPTER IV -->
-
-<div class="page" id="page28">
-
-    <div>
+    </div><div class="page-number">26</div></div></section><section class="face back" aria-label="Page 27"><div class="page-content"><div>
 
         <p>
             To live meant not allowing my past to define the future
@@ -1292,15 +971,8 @@ button {
             If God healed me, I would serve Him throughout my life.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 29 — CHAPTER IV -->
-
-<div class="page" id="page29">
-
-    <div>
+    </div><div class="page-number">27</div></div></section></div>
+<div class="sheet" data-sheet="14"><section class="face front" aria-label="Page 28"><div class="page-content"><div>
 
         <p>
             God had brought me through the darkness.
@@ -1330,15 +1002,7 @@ button {
             who loved me and gave himself for me."
         </P>
 
-    </div>
-
-</div>
-
-<!-- PAGE 30 — CHAPTER V -->
-
-<div class="page" id="page30">
-
-    <div>
+    </div><div class="page-number">28</div></div></section><section class="face back" aria-label="Page 29"><div class="page-content"><div>
 
         <h3>CHAPTER V</h3>
 
@@ -1370,15 +1034,8 @@ button {
             at the expense of other people's lives and well-being.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 31 — CHAPTER V -->
-
-<div class="page" id="page31">
-
-    <div>
+    </div><div class="page-number">29</div></div></section></div>
+<div class="sheet" data-sheet="15"><section class="face front" aria-label="Page 30"><div class="page-content"><div>
 
         <p>
             Sometimes, the consequences can be devastating. People can
@@ -1414,15 +1071,7 @@ button {
             How could someone like me lead others?
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 32 — CHAPTER V -->
-
-<div class="page" id="page32">
-
-    <div>
+    </div><div class="page-number">30</div></div></section><section class="face back" aria-label="Page 31"><div class="page-content"><div>
 
         <p>
             But God was teaching me that leadership in His service is not
@@ -1457,15 +1106,8 @@ button {
             trust in Him fully.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 33 — CHAPTER V -->
-
-<div class="page" id="page33">
-
-    <div>
+    </div><div class="page-number">31</div></div></section></div>
+<div class="sheet" data-sheet="16"><section class="face front" aria-label="Page 32"><div class="page-content"><div>
 
         <p>
             I reached a point where I could only say:
@@ -1502,15 +1144,7 @@ button {
             He was asking me to lead them closer to Him.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 34 — CHAPTER V -->
-
-<div class="page" id="page34">
-
-    <div>
+    </div><div class="page-number">32</div></div></section><section class="face back" aria-label="Page 33"><div class="page-content"><div>
 
         <p>
             I did not have to become the center of their lives. Jesus had
@@ -1546,15 +1180,8 @@ button {
             is needed.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 35 — CHAPTER V -->
-
-<div class="page" id="page35">
-
-    <div>
+    </div><div class="page-number">33</div></div></section></div>
+<div class="sheet" data-sheet="17"><section class="face front" aria-label="Page 34"><div class="page-content"><div>
 
         <p>
             And most importantly, to lead is to recognize that Jesus
@@ -1606,15 +1233,7 @@ button {
             for the Lord your God is with you wherever you go."  
         </P>
 
-    </div>
-
-</div>
-
-<!-- PAGE 36 — CHAPTER VI -->
-
-<div class="page" id="page36">
-
-    <div>
+    </div><div class="page-number">34</div></div></section><section class="face back" aria-label="Page 35"><div class="page-content"><div>
 
         <h3>CHAPTER VI</h3>
 
@@ -1641,15 +1260,8 @@ button {
             providence</strong>.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 37 — CHAPTER VI -->
-
-<div class="page" id="page37">
-
-    <div>
+    </div><div class="page-number">35</div></div></section></div>
+<div class="sheet" data-sheet="18"><section class="face front" aria-label="Page 36"><div class="page-content"><div>
 
         <p>
             When I said yes to God, I dedicated my life to serving Him
@@ -1682,15 +1294,7 @@ button {
             <strong>charity</strong>.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 38 — CHAPTER VI -->
-
-<div class="page" id="page38">
-
-    <div>
+    </div><div class="page-number">36</div></div></section><section class="face back" aria-label="Page 37"><div class="page-content"><div>
 
         <p>
             To me, charity is another name for love.
@@ -1730,15 +1334,8 @@ button {
             wanted me to do.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 39 — CHAPTER VI -->
-
-<div class="page" id="page39">
-
-    <div>
+    </div><div class="page-number">37</div></div></section></div>
+<div class="sheet" data-sheet="19"><section class="face front" aria-label="Page 38"><div class="page-content"><div>
 
         <p>
             Then, during prayer, I felt those words come to me:
@@ -1774,15 +1371,7 @@ button {
             <strong>Miracles do happen.</strong>
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 40 — CHAPTER VI -->
-
-<div class="page" id="page40">
-
-    <div>
+    </div><div class="page-number">38</div></div></section><section class="face back" aria-label="Page 39"><div class="page-content"><div>
 
         <p>
             The calling to teach began to take shape in ways I could
@@ -1821,15 +1410,8 @@ button {
             God is and how He works in our lives.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 41 — CHAPTER VI -->
-
-<div class="page" id="page41">
-
-    <div>
+    </div><div class="page-number">39</div></div></section></div>
+<div class="sheet" data-sheet="20"><section class="face front" aria-label="Page 40"><div class="page-content"><div>
 
         <p>
             If I am able to share these experiences with others, perhaps
@@ -1865,15 +1447,7 @@ button {
             <strong>alive in the Spirit</strong>.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 42 — CHAPTER VI -->
-
-<div class="page" id="page42">
-
-    <div>
+    </div><div class="page-number">40</div></div></section><section class="face back" aria-label="Page 41"><div class="page-content"><div>
 
         <p>
             And so I continue this journey with trust.
@@ -1917,15 +1491,8 @@ button {
             and give glory to your Father who is in heaven."
         </P>
 
-    </div>
-
-</div>
-
-<!-- PAGE 43 — CHAPTER VII -->
-
-<div class="page" id="page43">
-
-    <div>
+    </div><div class="page-number">41</div></div></section></div>
+<div class="sheet" data-sheet="21"><section class="face front" aria-label="Page 42"><div class="page-content"><div>
 
         <h3>CHAPTER VII</h3>
 
@@ -1962,15 +1529,7 @@ button {
             and support our needs.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 44 — CHAPTER VII -->
-
-<div class="page" id="page44">
-
-    <div>
+    </div><div class="page-number">42</div></div></section><section class="face back" aria-label="Page 43"><div class="page-content"><div>
 
         <p>
             Then something happened that I did not plan.
@@ -2015,15 +1574,8 @@ button {
             <strong>“I will make you a teacher.”</strong>
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 45 — CHAPTER VII -->
-
-<div class="page" id="page45">
-
-    <div>
+    </div><div class="page-number">43</div></div></section></div>
+<div class="sheet" data-sheet="22"><section class="face front" aria-label="Page 44"><div class="page-content"><div>
 
         <p>
             Then another opportunity came.
@@ -2062,15 +1614,7 @@ button {
             Honestly, I doubted that it would ever happen.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 46 — CHAPTER VII -->
-
-<div class="page" id="page46">
-
-    <div>
+    </div><div class="page-number">44</div></div></section><section class="face back" aria-label="Page 45"><div class="page-content"><div>
 
         <p>
             But God answered my doubt in a way I could not have planned
@@ -2111,15 +1655,8 @@ button {
             And my life itself could become a testimony.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 47 — CHAPTER VII -->
-
-<div class="page" id="page47">
-
-    <div>
+    </div><div class="page-number">45</div></div></section></div>
+<div class="sheet" data-sheet="23"><section class="face front" aria-label="Page 46"><div class="page-content"><div>
 
         <p>
             Looking back, I see this as one of the moments when God's
@@ -2154,15 +1691,7 @@ button {
             imagined, but in the way God allowed me to become one.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 48 — CHAPTER VII -->
-
-<div class="page" id="page48">
-
-    <div>
+    </div><div class="page-number">46</div></div></section><section class="face back" aria-label="Page 47"><div class="page-content"><div>
 
         <p>
             I teach through my profession.
@@ -2212,15 +1741,8 @@ button {
             bring it to completion at the day of Jesus Christ." 
         </P>
 
-    </div>
-
-</div>
-
-<!-- PAGE 49 — PART TWO: THE JOURNEY BEGINS -->
-
-<div class="page" id="page49">
-
-    <div>
+    </div><div class="page-number">47</div></div></section></div>
+<div class="sheet" data-sheet="24"><section class="face front" aria-label="Page 48"><div class="page-content"><div>
 
         <h2>PART TWO</h2>
 
@@ -2232,15 +1754,7 @@ button {
 
         <p>10. The Street Dwellers</p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 50 — CHAPTER VIII -->
-
-<div class="page" id="page50">
-
-    <div>
+    </div><div class="page-number">48</div></div></section><section class="face back" aria-label="Page 49"><div class="page-content"><div>
 
         <h3>CHAPTER VIII</h3>
 
@@ -2280,15 +1794,8 @@ button {
             The idea was simple: Take what you need, and give what you can.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 51 — CHAPTER VIII -->
-
-<div class="page" id="page51">
-
-    <div>
+    </div><div class="page-number">49</div></div></section></div>
+<div class="sheet" data-sheet="25"><section class="face front" aria-label="Page 50"><div class="page-content"><div>
 
         <p>
             People who had little or no food on their tables could come
@@ -2330,15 +1837,7 @@ button {
             He would provide a way for it to happen.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 52 — CHAPTER VIII -->
-
-<div class="page" id="page52">
-
-    <div>
+    </div><div class="page-number">50</div></div></section><section class="face back" aria-label="Page 51"><div class="page-content"><div>
 
         <p>
             I started an online campaign and used the gifts and talents
@@ -2379,15 +1878,8 @@ button {
             a little faith, and the courage to take the first step.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 53 — CHAPTER VIII -->
-
-<div class="page" id="page53">
-
-    <div>
+    </div><div class="page-number">51</div></div></section></div>
+<div class="sheet" data-sheet="26"><section class="face front" aria-label="Page 52"><div class="page-content"><div>
 
         <p>
             We prepared the food packs and traveled through the streets
@@ -2432,15 +1924,7 @@ button {
             during those uncertain times.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 54 — CHAPTER VIII -->
-
-<div class="page" id="page54">
-
-    <div>
+    </div><div class="page-number">52</div></div></section><section class="face back" aria-label="Page 53"><div class="page-content"><div>
 
         <p>
             The food was important.
@@ -2490,15 +1974,8 @@ button {
             And there is a God who loves them.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 55 — CHAPTER VIII -->
-
-<div class="page" id="page55">
-
-    <div>
+    </div><div class="page-number">53</div></div></section></div>
+<div class="sheet" data-sheet="27"><section class="face front" aria-label="Page 54"><div class="page-content"><div>
 
         <p>
             Jesus Christ.
@@ -2558,15 +2035,7 @@ button {
             nor the destruction that wastes at noonday."
         </P>
 
-    </div>
-
-</div>
-
-<!-- PAGE 56 — CHAPTER IX -->
-
-<div class="page" id="page56">
-
-    <div>
+    </div><div class="page-number">54</div></div></section><section class="face back" aria-label="Page 55"><div class="page-content"><div>
 
         <h3>CHAPTER IX</h3>
 
@@ -2601,15 +2070,8 @@ button {
             Once again, I felt prompted to do something.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 57 — CHAPTER IX -->
-
-<div class="page" id="page57">
-
-    <div>
+    </div><div class="page-number">55</div></div></section></div>
+<div class="sheet" data-sheet="28"><section class="face front" aria-label="Page 56"><div class="page-content"><div>
 
         <p>
             We organized another campaign—not this time to distribute
@@ -2649,15 +2111,7 @@ button {
             But God had something more in store for me that day.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 58 — CHAPTER IX -->
-
-<div class="page" id="page58">
-
-    <div>
+    </div><div class="page-number">56</div></div></section><section class="face back" aria-label="Page 57"><div class="page-content"><div>
 
         <p>
             He gave me an opportunity not only to give school supplies,
@@ -2701,15 +2155,8 @@ button {
             and love.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 59 — CHAPTER IX -->
-
-<div class="page" id="page59">
-
-    <div>
+    </div><div class="page-number">57</div></div></section></div>
+<div class="sheet" data-sheet="29"><section class="face front" aria-label="Page 58"><div class="page-content"><div>
 
         <p>
             I also encouraged them to love and appreciate their teachers.
@@ -2760,15 +2207,7 @@ button {
             “Thank you.”
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 60 — CHAPTER IX -->
-
-<div class="page" id="page60">
-
-    <div>
+    </div><div class="page-number">58</div></div></section><section class="face back" aria-label="Page 59"><div class="page-content"><div>
 
         <p>
             Thank you to all the teachers who helped shape our lives.
@@ -2812,15 +2251,8 @@ button {
             gratitude for the gifts they had received.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 61 — CHAPTER IX -->
-
-<div class="page" id="page61">
-
-    <div>
+    </div><div class="page-number">59</div></div></section></div>
+<div class="sheet" data-sheet="30"><section class="face front" aria-label="Page 60"><div class="page-content"><div>
 
         <p>
             For me, that moment was deeply meaningful.
@@ -2869,15 +2301,7 @@ button {
             When we give our resources, we give love.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 62 — CHAPTER IX -->
-
-<div class="page" id="page62">
-
-    <div>
+    </div><div class="page-number">60</div></div></section><section class="face back" aria-label="Page 61"><div class="page-content"><div>
 
         <p>
             When we listen to someone, we give love.
@@ -2940,15 +2364,8 @@ button {
             according to his riches in glory in Christ Jesus."
         </P>
 
-    </div>
-
-</div>
-
-<!-- PAGE 63 — CHAPTER X -->
-
-<div class="page" id="page63">
-
-    <div>
+    </div><div class="page-number">61</div></div></section></div>
+<div class="sheet" data-sheet="31"><section class="face front" aria-label="Page 62"><div class="page-content"><div>
 
         <h3>CHAPTER X</h3>
 
@@ -2986,15 +2403,7 @@ button {
             and bring food home to their families.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 64 — CHAPTER X -->
-
-<div class="page" id="page64">
-
-    <div>
+    </div><div class="page-number">62</div></div></section><section class="face back" aria-label="Page 63"><div class="page-content"><div>
 
         <p>
             What touched me deeply was that many of them were not thinking
@@ -3047,15 +2456,8 @@ button {
             compassion we shared with them.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 65 — CHAPTER X -->
-
-<div class="page" id="page65">
-
-    <div>
+    </div><div class="page-number">63</div></div></section></div>
+<div class="sheet" data-sheet="32"><section class="face front" aria-label="Page 64"><div class="page-content"><div>
 
         <p>
             This was becoming clearer to me:
@@ -3110,15 +2512,7 @@ button {
             The path where they met Christ.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 66 — CHAPTER X -->
-
-<div class="page" id="page66">
-
-    <div>
+    </div><div class="page-number">64</div></div></section><section class="face back" aria-label="Page 65"><div class="page-content"><div>
 
         <p>
             I realized that I could help provide food for that particular
@@ -3169,15 +2563,8 @@ button {
             Jesus leads us.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 67 — CHAPTER X -->
-
-<div class="page" id="page67">
-
-    <div>
+    </div><div class="page-number">65</div></div></section></div>
+<div class="sheet" data-sheet="33"><section class="face front" aria-label="Page 66"><div class="page-content"><div>
 
         <p>
             When we allow His presence to guide our lives, His Kingdom
@@ -3228,15 +2615,7 @@ button {
             When we give hope, we strengthen the heart.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 68 — CHAPTER X -->
-
-<div class="page" id="page68">
-
-    <div>
+    </div><div class="page-number">66</div></div></section><section class="face back" aria-label="Page 67"><div class="page-content"><div>
 
         <p>
             And when we lead someone toward Jesus, we help them discover
@@ -3277,15 +2656,8 @@ button {
             you did it to me.'"  
         </P>
 
-    </div>
-
-</div>
-
-<!-- PAGE 69 — PART THREE: THE MISSION TAKES SHAPE -->
-
-<div class="page" id="page69">
-
-    <div>
+    </div><div class="page-number">67</div></div></section></div>
+<div class="sheet" data-sheet="34"><section class="face front" aria-label="Page 68"><div class="page-content"><div>
 
         <h2>PART THREE</h2>
 
@@ -3295,15 +2667,7 @@ button {
 
         <p>12. The Journey Continues</p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 70 — CHAPTER XI -->
-
-<div class="page" id="page70">
-
-    <div>
+    </div><div class="page-number">68</div></div></section><section class="face back" aria-label="Page 69"><div class="page-content"><div>
 
         <h3>CHAPTER XI</h3>
 
@@ -3347,15 +2711,8 @@ button {
             Always make me Your good and humble servant.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 71 — CHAPTER XI -->
-
-<div class="page" id="page71">
-
-    <div>
+    </div><div class="page-number">69</div></div></section></div>
+<div class="sheet" data-sheet="35"><section class="face front" aria-label="Page 70"><div class="page-content"><div>
 
         <p>
             Teach me to serve without seeking recognition.
@@ -3405,15 +2762,7 @@ button {
             Let my heart remain open to those who are hurting.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 72 — CHAPTER XI -->
-
-<div class="page" id="page72">
-
-    <div>
+    </div><div class="page-number">70</div></div></section><section class="face back" aria-label="Page 71"><div class="page-content"><div>
 
         <p>
             And when I do not know where to go, guide my steps.
@@ -3468,17 +2817,8 @@ button {
             let it be to me according to your word.'"
         </P>
 
-    </div>
-
-</div>
-
-
-
-<!-- PAGE 73 — CHAPTER XII -->
-
-<div class="page" id="page73">
-
-    <div>
+    </div><div class="page-number">71</div></div></section></div>
+<div class="sheet" data-sheet="36"><section class="face front" aria-label="Page 72"><div class="page-content"><div>
 
         <h3>CHAPTER XII</h3>
 
@@ -3511,15 +2851,7 @@ button {
             missionary work.
         </p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 74 — CHAPTER XII -->
-
-<div class="page" id="page74">
-
-    <div>
+    </div><div class="page-number">72</div></div></section><section class="face back" aria-label="Page 73"><div class="page-content"><div>
 
         <p>
             I am just waiting for God's provisions.
@@ -3575,15 +2907,8 @@ button {
             I will make a way in the wilderness and rivers in the desert."
         </P>
 
-    </div>
-
-</div>
-
-<!-- PAGE 75 — PART FOUR: CLOSING PAGES -->
-
-<div class="page" id="page75">
-
-    <div>
+    </div><div class="page-number">73</div></div></section></div>
+<div class="sheet" data-sheet="37"><section class="face front" aria-label="Page 74"><div class="page-content"><div>
 
         <h2>PART FOUR</h2>
 
@@ -3595,15 +2920,7 @@ button {
 
         <p>15. FINAL PRAYER</p>
 
-    </div>
-
-</div>
-
-<!-- PAGE 76 — CLOSING PAGES -->
-
-<div class="page" id="page76">
-
-    <div>
+    </div><div class="page-number">74</div></div></section><section class="face back" aria-label="Page 75"><div class="page-content"><div>
 
         <h3>CHAPTER XIII</h3>
 
@@ -3659,15 +2976,8 @@ button {
             and his grace toward me was not in vain."
         </P>
 
-    </div>
-
-</div>
-
-<!-- PAGE 77 — CLOSING PAGES -->
-
-<div class="page" id="page77">
-
-    <div>
+    </div><div class="page-number">75</div></div></section></div>
+<div class="sheet" data-sheet="38"><section class="face front" aria-label="Page 76"><div class="page-content"><div>
 
         <h3>CHAPTER XIV</h3>
 
@@ -3721,15 +3031,7 @@ button {
             and in all Judea and Samaria, and to the end of the earth."
         </P>
 
-    </div>
-
-</div>
-
-<!-- PAGE 78 — CLOSING PAGES -->
-
-<div class="page" id="page78">
-
-    <div>
+    </div><div class="page-number">76</div></div></section><section class="face back" aria-label="Page 77"><div class="page-content"><div>
 
         <h3>CHAPTER XV</h3>
 
@@ -3791,71 +3093,62 @@ button {
             and the meditation of my heart 
             be acceptable in your sight, 
             O Lord, my rock and my redeemer."
-        </P>
-
-    </div>
-
+        </P><div class="page-number">77</div></div></section></div></main>
+  </section>
+  <nav class="controls" aria-label="Book navigation">
+    <button id="previousButton" type="button" aria-label="Previous page">&#8592; Previous</button>
+    <span class="progress" id="pageStatus" aria-live="polite"></span>
+    <button id="nextButton" type="button" aria-label="Next page">Next &#8594;</button>
+    <p class="hint">Turn the front cover, then read pages 1 and 2 as a spread. Use buttons, arrow keys, or swipe.</p>
+  </nav>
 </div>
-
-<button onclick="previousPage()">
-    ← Previous
-</button>
-
-<button onclick="nextPage()">
-    Next →
-</button>
-
-
 <script>
+(function(){
+  'use strict';
+  var book=document.getElementById('book');
+  var sheets=Array.prototype.slice.call(book.querySelectorAll('.sheet'));
+  var previousButton=document.getElementById('previousButton');
+  var nextButton=document.getElementById('nextButton');
+  var pageStatus=document.getElementById('pageStatus');
+  var position=0,busy=false,touchStartX=0;
+  var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var duration=reduced?30:930;
 
-let currentPage = 1;
-
-
-function showPage(pageNumber) {
-
-    document
-        .querySelectorAll(".page")
-        .forEach(function(page) {
-
-            page.classList.remove("active");
-
-        });
-
-    document
-        .getElementById("page" + pageNumber)
-        .classList.add("active");
-
-}
-
-
-function nextPage() {
-
-    if (currentPage < 78) {
-
-        currentPage++;
-
-        showPage(currentPage);
-
+  function restack(){
+    for(var i=0;i<sheets.length;i++){
+      var turned=i<position;
+      sheets[i].classList.toggle('turned',turned);
+      sheets[i].style.zIndex=turned?String(i+1):String(sheets.length-i+10);
     }
-
-}
-
-
-function previousPage() {
-
-    if (currentPage > 1) {
-
-        currentPage--;
-
-        showPage(currentPage);
-
-    }
-
-}
-
+    book.classList.toggle('closed',position===0);
+  }
+  function status(){
+    if(position===0){pageStatus.textContent='Front cover';}
+    else if(position>=sheets.length){pageStatus.textContent='End of book';}
+    else{var left=position*2-1;pageStatus.textContent='Pages '+left+' and '+(left+1);}
+    previousButton.disabled=position===0||busy;
+    nextButton.disabled=position>=sheets.length||busy;
+    document.title='The Traveling Messiah - '+pageStatus.textContent;
+  }
+  function go(next){
+    if(busy||next<0||next>sheets.length||next===position)return;
+    busy=true;
+    var forward=next>position;
+    var leaf=forward?sheets[position]:sheets[position-1];
+    leaf.style.zIndex=String(sheets.length+100);
+    if(forward)leaf.classList.add('turned');else leaf.classList.remove('turned');
+    position=next;
+    book.classList.toggle('closed',position===0);
+    status();
+    window.setTimeout(function(){busy=false;restack();status();},duration);
+  }
+  previousButton.addEventListener('click',function(){go(position-1)});
+  nextButton.addEventListener('click',function(){go(position+1)});
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='PageDown')go(position+1);if(e.key==='ArrowLeft'||e.key==='PageUp')go(position-1);if(e.key==='Home')go(0);if(e.key==='End')go(sheets.length)});
+  book.addEventListener('touchstart',function(e){touchStartX=e.changedTouches[0].clientX},{passive:true});
+  book.addEventListener('touchend',function(e){var d=e.changedTouches[0].clientX-touchStartX;if(Math.abs(d)>55)go(position+(d<0?1:-1))},{passive:true});
+  restack();status();
+})();
 </script>
-
-
 </body>
-
 </html>
