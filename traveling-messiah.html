@@ -1,0 +1,3138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Traveling Messiah - Flip Ebook</title>
+<style>
+:root {
+  --paper:#f4e7c9; --edge:#d3b783; --ink:#261b12; --gold:#c69b48;
+  --page-w:min(43vw,560px); --page-h:min(76vh,820px); --speed:900ms;
+}
+*{box-sizing:border-box} html,body{min-height:100%}
+body{margin:0;color:var(--ink);background:radial-gradient(circle at 50% 8%,rgba(198,155,72,.18),transparent 34%),linear-gradient(135deg,#080706,#1d1611 55%,#090706);font-family:Georgia,"Times New Roman",serif;overflow-x:hidden}
+.reader{min-height:100vh;display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:14px}
+.reader-header{display:flex;align-items:center;justify-content:space-between;gap:16px;width:min(1140px,96vw);margin:auto;color:#f5e8ca}
+.reader-header h1{margin:0;font-size:clamp(1.1rem,3vw,1.65rem)} .reader-header p{margin:0;color:#d8c7a4;font-size:.9rem}
+.stage{min-height:0;display:grid;place-items:center;perspective:2600px;overflow:visible}
+.book{position:relative;width:calc(var(--page-w)*2);height:var(--page-h);min-height:500px;transform-style:preserve-3d;transition:transform .55s ease;filter:drop-shadow(0 22px 25px rgba(0,0,0,.52))}
+.book.closed{transform:translateX(calc(var(--page-w)/-2))}
+.book::before{content:"";position:absolute;inset:-9px;z-index:-5;border:2px solid #5e4327;border-radius:12px;background:#3a2618}
+.book.closed::before{left:50%}
+.gutter{position:absolute;inset:0 auto 0 50%;width:24px;z-index:9999;transform:translateX(-50%);pointer-events:none;background:linear-gradient(90deg,transparent,rgba(42,23,10,.28),rgba(255,255,255,.12),rgba(42,23,10,.27),transparent)}
+.sheet{position:absolute;top:0;left:50%;width:var(--page-w);height:100%;transform-origin:left center;transform-style:preserve-3d;transition:transform var(--speed) cubic-bezier(.45,.04,.18,1);will-change:transform}
+.sheet.turned{transform:rotateY(-180deg)}
+.face{position:absolute;inset:0;overflow-y:auto;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--paper);border:1px solid var(--edge);box-shadow:inset 0 0 28px rgba(104,70,29,.13)}
+.front{border-radius:2px 10px 10px 2px;background:linear-gradient(90deg,rgba(72,43,18,.19),transparent 7%,transparent 96%,rgba(72,43,18,.12)),var(--paper)}
+.back{transform:rotateY(180deg);border-radius:10px 2px 2px 10px;background:linear-gradient(90deg,rgba(72,43,18,.11),transparent 5%,transparent 93%,rgba(72,43,18,.21)),var(--paper)}
+.page-content{min-height:100%;padding:clamp(26px,3.1vw,48px);position:relative;padding-bottom:62px}
+.page-content h1,.page-content h2,.page-content h3{color:#2f2015;text-wrap:balance}.page-content h1{font-size:clamp(1.5rem,3vw,2.25rem);margin:0 0 24px}.page-content h2{font-size:clamp(1.3rem,2.6vw,1.85rem);margin:0 0 22px}.page-content h3{font-size:clamp(1.1rem,2.2vw,1.55rem);text-align:center}.page-content p{font-size:clamp(.92rem,1.45vw,1.06rem);line-height:1.6;text-align:left;margin:0 0 1em}.page-content img{max-width:100%;height:auto}.cover{width:min(330px,85%);max-height:55vh;object-fit:contain}
+.page-number{position:absolute;bottom:20px;left:0;right:0;text-align:center;color:#654a2b;font-size:.84rem;font-variant-numeric:tabular-nums}
+.blank{height:100%;background:var(--paper)}
+.cover-page{min-height:100%;display:flex;align-items:center;justify-content:center;text-align:center}
+.cover-page h1{margin:0;font-size:clamp(1.6rem,3.4vw,2.5rem);letter-spacing:.02em}
+.toc-page h1{font-size:clamp(1.1rem,2.2vw,1.5rem);margin:0 0 12px}
+.toc-page h2{font-size:clamp(1rem,1.9vw,1.25rem);margin:14px 0 8px}
+.toc-page h3{font-size:clamp(.9rem,1.6vw,1.05rem);margin:0 0 8px}
+.toc-page p{font-size:clamp(.75rem,1.15vw,.85rem);line-height:1.35;margin:0 0 .5em}
+.toc-page strong{display:block}
+.controls{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;color:#f5e8ca}button{border:1px solid #876a38;border-radius:999px;background:#f1dfb9;color:#2b1c11;font:600 1rem Georgia,serif;padding:10px 18px;cursor:pointer;min-width:116px}button:hover:not(:disabled){background:#fff2d3;transform:translateY(-1px)}button:disabled{opacity:.4;cursor:not-allowed}.progress{min-width:155px;text-align:center;font-variant-numeric:tabular-nums}.hint{color:#c9b58e;font-size:.82rem;width:100%;margin:0;text-align:center}
+@media(max-width:620px){:root{--page-w:92vw;--page-h:75vh}.reader{padding:8px}.reader-header p{display:none}.book{width:var(--page-w);min-height:470px}.book,.book.closed{transform:none}.book::before,.book.closed::before{inset:-7px}.sheet{left:0}.gutter{display:none}.page-content{padding:27px 22px 58px}button{min-width:104px;padding:9px 14px}}
+@media(prefers-reduced-motion:reduce){.sheet{transition-duration:.01ms}.book{transition-duration:.01ms}}
+</style>
+</head>
+<body>
+<div class="reader">
+  <header class="reader-header">
+    <h1>The Traveling Messiah</h1>
+    <p>Magazine-style flipbook</p>
+  </header>
+  <section class="stage">
+<main class="book closed" id="book" aria-label="The Traveling Messiah flip ebook"><div class="gutter" aria-hidden="true"></div>
+<div class="sheet" data-sheet="0"><section class="face front" aria-label="Front cover"><div class="page-content cover-page">
+
+        <h1>The Traveling Messiah</h1>
+
+    </div></section><section class="face back" aria-label="Page 1"><div class="page-content"><div>
+
+        <h2>WELCOME TO THE JOURNEY</h2>
+
+        <p>
+            The Traveling Messiah is my companion as I walk in faith.
+        
+            It is the image that I carry so that people may know Him
+            through my missionary spirit.
+    
+            His public ministry taught me everything.
+            His mission work continues with us—not only with me.
+
+            This journey will lead us into His Kingdom here on Earth
+            until we meet Him face to face.
+        
+            This is what I am called for.
+
+            The Father's love, breathed into us through the Holy Spirit,
+            connects us to the Son.
+
+            His believers are waiting. And I believe this journey is
+            part of that waiting—a journey of faith, love, service,
+            and hope as we continue to follow where He leads.
+    
+            Welcome to the journey of The Traveling Messiah.
+        </p>
+
+    </div><div class="page-number">1</div></div></section></div>
+<div class="sheet" data-sheet="1"><section class="face front" aria-label="Page 2"><div class="page-content toc-page"><div>
+
+        <h1>TABLE OF CONTENTS</h1>
+
+        <h2>PART ONE</h2>
+        <h3>THE CALLING</h3>
+
+        <p>
+        <strong>I. The Mission That Travels</strong>
+
+        <strong>II. A Mission Spring from Childhood</strong>
+
+        <strong>III. When the Calling Became Clear</strong>
+
+        <strong>IV. Live</strong>
+
+        <strong>V. Lead</strong>
+
+        <strong>VI. I Will Make You A Teacher</strong>
+
+        <strong>VII. When The Promise Became A Reality</strong>
+        
+        </p>
+
+        <h2>PART TWO</h2>
+        <h3>THE JOURNEY BEGINS</h3>
+
+        <p><strong>VIII. The Mission During the Pandemic</strong></p>                       
+        <p><strong>IX. The Good Provider</strong></p>
+        <p><strong>X. The Street Dwellers</strong></p>
+
+        <h2>PART THREE</h2>
+        <h3>THE MISSION TAKES SHAPE</h3>
+
+        <p><strong>XI. I Am the Servant of God</strong></p>
+        <p><strong>XII. The Journey Continues</strong></p>
+
+        <h2>CLOSING PAGES</h2>
+
+        <p><strong>XIII. About the Author</strong></p>
+        <p><strong>XIV. The Traveling Messiah Mission</strong></p>
+        <p><strong>XV. Final Prayer</strong></p>
+
+    </div><div class="page-number">2</div></div></section><section class="face back" aria-label="Page 3"><div class="page-content"><div>
+
+        <h2>PART ONE</h2>
+
+        <h1>THE CALLING</h1>
+
+        <p>1. The Mission That Travels</p>
+
+        <p>2. A Mission Spring from Childhood</p>
+
+        <p>3. When the Calling Became Clear</p>
+
+        <p>4. Live</p>
+
+        <p>5. Lead</p>
+
+        <p>6. I will make you a Teacher</p>
+
+        <p>7. When The Promise Became A Reality</p>
+
+    </div><div class="page-number">3</div></div></section></div>
+<div class="sheet" data-sheet="2"><section class="face front" aria-label="Page 4"><div class="page-content"><div>
+
+        <h3>CHAPTER I</h3>
+
+        <h2>THE MISSION THAT TRAVELS</h2>
+
+        <p>
+            I am Resty Suela, a Missionary of Faith.
+        </p>
+
+        <p>
+            My understanding of God has been shaped through
+            the different religious communities I have been
+            part of throughout my life. Each community, each
+            experience, and each person I encountered contributed
+            something to my understanding of faith and my
+            relationship with God.
+        </p>
+
+        <p>
+            As a caregiver, I developed within myself a deeper
+            sense of charity and love—a love that is not merely
+            spoken, but expressed through action.
+        </p>
+
+        <p>
+            Caring for others taught me that faith becomes
+            meaningful when it is expressed through compassion,
+            service, patience, and genuine concern for another person.
+        </p>
+
+        <p>
+            At the same time, my background as a software engineer
+            opened another possibility for the mission I carry in
+            my heart.
+        </p>
+
+        <p>
+            Technology has given me a way to share the message
+            of Jesus beyond the limitations of physical distance.
+        </p>
+
+    </div><div class="page-number">4</div></div></section><section class="face back" aria-label="Page 5"><div class="page-content"><div>
+
+        <p>
+            Through the World Wide Web, social media, and emerging
+            technologies such as virtual reality, I can help bring
+            the message of the Gospel to people who may be thousands
+            of miles away.
+        </p>
+
+        <p>
+            A mission does not always require us to physically travel
+            to every place. Sometimes, technology allows the message
+            to travel where we cannot.
+        </p>
+
+        <p>
+            Today, I am working as a Grab driver. This is a choice I
+            made as part of the reality of life—a way to survive,
+            provide for my family, and raise my daughter together
+            with my wife.
+        </p>
+
+        <p>
+            But I have also come to see this work as another
+            opportunity that God has placed before me.
+        </p>
+
+        <p>
+           
+    Every journey brings me into contact with people.
+    Every passenger has a story. Every conversation can
+    become an opportunity. And by God's grace, there may
+    be someone along the way who is searching, hurting,
+    asking questions, or simply in need of hearing God's Word.
+
+        </p>
+
+        
+    </div><div class="page-number">5</div></div></section></div>
+<div class="sheet" data-sheet="3"><section class="face front" aria-label="Page 6"><div class="page-content"><div>
+
+        <p>
+            I do not know where every journey will lead me.
+            But I believe that God can create opportunities
+            even in the ordinary circumstances of life.
+        </p>
+
+        <p>
+            This is why The Traveling Messiah became significant
+            to me.
+        </p>
+
+        <p>
+            But let me make one thing clear:
+        </p>
+
+        <p>
+            The Traveling Messiah is journeying with us, and that
+            is Jesus.
+        </p>
+
+        <p>
+            He lives in our hearts. As we walk together in unison
+            with Him, He becomes our source of hope, our guide,
+            and the vessel through whom salvation is offered to
+            us and to others.
+        </p>
+
+        <p>
+            It is a journey of bringing Jesus into the hearts and
+            souls of humanity—through our words, through our actions,
+            through our service, through technology, through our
+            travels, and most importantly, through the way we live
+            our faith.
+        </p>
+
+    </div><div class="page-number">6</div></div></section><section class="face back" aria-label="Page 7"><div class="page-content"><div>
+
+        <p>
+            The road may be physical, or it may be digital.
+        </p>
+
+        <p>
+            The journey may happen in a vehicle, in a workplace,
+            in a church, on the roads that lead us to faraway
+            places and other countries, through a computer, or
+            across the internet.
+        </p>
+
+        <p>
+            Wherever the journey takes us, Jesus is traveling
+            with us.
+        </p>
+
+        <p>
+            And wherever there is someone searching for hope,
+            may we have the courage to bring them the Good News
+            of Salvation.
+        </p>
+
+        <P>
+            Matthew 28:19–20
+        </P>
+        
+        <P>
+            "Go therefore and make disciples of all nations, 
+            baptizing them in the name of the Father 
+            and of the Son and of the Holy Spirit,
+            teaching them to observe all that I have commanded you. 
+            And behold, I am with you always, to the end of the age."  
+        </P>
+
+    </div><div class="page-number">7</div></div></section></div>
+<div class="sheet" data-sheet="4"><section class="face front" aria-label="Page 8"><div class="page-content"><div>
+
+        <h3>CHAPTER II</h3>
+
+        <h2>A MISSION SPRING FROM CHILDHOOD</h2>
+
+        <p>
+            I believe that my mission is rooted in a strong calling
+            from God.
+        </p>
+
+        <p>
+            When I was a child, most of my friends along our street
+            were older than me. We spent our free time playing
+            basketball, billiards, chess, and many other games.
+            Those ordinary moments of childhood became part of the
+            environment in which I grew up.
+        </p>
+
+        <p>
+            But even at a young age, my friends would sometimes
+            tell me that I behaved and acted like a priest.
+        </p>
+
+        <p>
+            I was often the one who would argue for what I believed
+            was good and right. When I saw someone doing something
+            wrong or making a bad decision, I would often speak up
+            and give advice.
+        </p>
+
+    </div><div class="page-number">8</div></div></section><section class="face back" aria-label="Page 9"><div class="page-content"><div>
+
+        <p>
+            I did not always understand why I felt compelled to do this.
+            I simply felt that when something was wrong, I should not
+            remain silent.
+        </p>
+
+        <p>
+            Looking back now, I wonder if those qualities were already
+            pointing toward something that God was preparing within me.
+        </p>
+
+        <p>
+            There is also a story my mother shared with me about the
+            time when she was pregnant with me.
+        </p>
+
+        <p>
+            She told me that during her pregnancy, she experienced
+            great pain and was crying and shouting. At that moment,
+            a woman dressed in white came to her and comforted her.
+        </p>
+
+        <p>
+            The woman told her not to cry while placing her hand on
+            my mother's stomach and holding her hand. She also gave
+            my mother a small religious booklet.
+        </p>
+
+    </div><div class="page-number">9</div></div></section></div>
+<div class="sheet" data-sheet="5"><section class="face front" aria-label="Page 10"><div class="page-content"><div>
+
+        <p>
+            My mother never knew who the woman was. No one seemed
+            to notice her, and no one was able to identify her.
+            Because of the woman's appearance and what happened
+            during that moment, the first thing that came to my mind 
+            was that she may have been the Blessed Virgin Mary.
+        </p>
+
+        <p>
+            I cannot claim to know exactly what happened that day.
+            That experience belongs to my mother's testimony.
+        </p>
+
+        <p>
+            But it became part of the story she passed on to me,
+            and it became part of how I came to understand that my
+            life may have been surrounded by God's grace even
+            before I was born.
+        </p>
+
+        <p>
+            There is another reason I feel deeply connected to
+            this mission:
+        </p>
+
+        <p>
+            <strong>gratitude.</strong>
+        </p>
+
+    </div><div class="page-number">10</div></div></section><section class="face back" aria-label="Page 11"><div class="page-content"><div>
+
+        <p>
+            My life was not always a straight path toward God.
+        </p>
+
+        <p>
+            When I was about to enter college, I was influenced
+            by people and circumstances that led me into different
+            bad habits. What began as influence eventually became
+            an addiction, and it started to ruin my life.
+        </p>
+
+        <p>
+            Looking back, I feel that almost ten years of my life
+            were lost because of those choices and the life I had
+            fallen into. But healing was a long process.
+        </p>
+
+        <p>
+            Our family was not perfect, but I remain deeply
+            thankful for my mother. She raised me with the values
+            she knew were right and sent me to Catholic schools,
+            where my foundation of faith and values was formed.
+        </p>
+
+        <p>
+            As I grew older, I found myself defeated in many
+            battles. I experienced pain, suffering, and struggles
+            that I could not overcome by myself.
+        </p>
+
+    </div><div class="page-number">11</div></div></section></div>
+<div class="sheet" data-sheet="6"><section class="face front" aria-label="Page 12"><div class="page-content"><div>
+
+        <p>
+            But God rescued me.
+        </p>
+
+        <p>
+            Little by little, I began the journey of recovery.
+        </p>
+
+        <p>
+            I started attending Daily Mass. I searched for God's
+            Word. I searched for His presence. I wanted to understand
+            Him, and more than that, I wanted to find my way back to Him.
+        </p>
+
+        <p>
+            During that period of my life, I made a promise to God:
+        </p>
+
+        <p>
+            “If You heal me from all this pain and suffering, and if
+            You give me the strength to recover, I will serve You all
+            throughout my life.”
+        </p>
+
+        <p>
+            That promise became deeply rooted in my heart.
+        </p>
+
+    </div><div class="page-number">12</div></div></section><section class="face back" aria-label="Page 13"><div class="page-content"><div>
+
+        <p>
+            I did not know then what that service would look like.
+            I did not know where it would take me or what God would
+            ask of me.
+        </p>
+
+        <p>
+            But I knew one thing:
+        </p>
+
+        <p>
+            <strong>I had been given another chance.</strong>
+        </p>
+
+        <p>
+            And I could not simply receive that grace and keep it
+            for myself.
+        </p>
+
+        <p>
+            I wanted my life to become an offering of gratitude.
+        </p>
+
+        <p>
+            The years I thought were wasted became part of my testimony.
+            The battles that defeated me became lessons in humility.
+            The suffering I experienced became a reason to understand
+            the suffering of others.
+        </p>
+
+    </div><div class="page-number">13</div></div></section></div>
+<div class="sheet" data-sheet="7"><section class="face front" aria-label="Page 14"><div class="page-content"><div>
+
+        <p>
+            And the God whom I once searched for became the God
+            I wanted to serve.
+        </p>
+
+        <p>
+            Perhaps this is why I now understand my calling differently.
+        </p>
+
+        <p>
+            A missionary is not necessarily someone who has lived
+            a perfect life.
+        </p>
+
+        <p>
+            Sometimes, a missionary is someone who has fallen,
+            been rescued, healed, and then chooses to tell others
+            where the road to hope can be found.
+        </p>
+
+        <P>
+            Jeremiah 1:5
+        </P>
+
+        <P>
+            "Before I formed you in the womb I knew you, 
+            and before you were born I consecrated you; 
+            I appointed you a prophet to the nations."
+        </P>
+           
+    </div><div class="page-number">14</div></div></section><section class="face back" aria-label="Page 15"><div class="page-content"><div>
+
+        <h3>CHAPTER III</h3>
+
+        <h2>WHEN THE CALLING BECAME CLEAR</h2>
+
+        <p>
+            My healing did not happen overnight.
+        </p>
+
+        <p>
+            It was a gradual journey. Little by little, the years
+            of struggle became years of transformation. As I continued
+            to seek God, attend Daily Mass, pray, and search for His
+            Word and His presence, something began to change within me.
+        </p>
+
+        <p>
+            I became more serious about serving the Lord.
+        </p>
+
+        <p>
+            During those moments of prayer, there were times when
+            I felt God placing certain words deeply in my heart:
+        </p>
+
+        <p>
+            “Live.”
+        </p>
+
+        <p>
+            “Lead.”
+        </p>
+
+        <p>
+            And then:
+        </p>
+
+        <p>
+            “I will make you a teacher.”
+        </p>
+
+    </div><div class="page-number">15</div></div></section></div>
+<div class="sheet" data-sheet="8"><section class="face front" aria-label="Page 16"><div class="page-content"><div>
+
+        <p>
+            These words stayed with me.
+        </p>
+
+        <p>
+            At first, I did not fully understand what they meant.
+            I questioned myself. I wondered how I could become a
+            teacher when I had not followed the traditional path
+            of becoming one.
+        </p>
+
+        <p>
+            But I learned that God's calling does not always come
+            with a complete explanation.
+        </p>
+
+        <p>
+            Sometimes, He gives us a direction before He shows us
+            the entire road.
+        </p>
+
+        <p>
+            So I continued to live, to learn, to serve, and to follow
+            the opportunities that came before me.
+        </p>
+
+    </div><div class="page-number">16</div></div></section><section class="face back" aria-label="Page 17"><div class="page-content"><div>
+
+        <p>
+            Over time, I began to see that the things I had
+            experienced—even the painful years—were not simply
+            chapters I wanted to forget. God was using my
+            experiences to shape my character, deepen my
+            compassion, and teach me how to understand the
+            struggles of other people.
+        </p>
+
+        <p>
+            The calling to live became a reminder that my life
+            was a gift.
+        </p>
+
+        <p>
+            The calling to lead became a responsibility to guide
+            others toward what is good and true.
+        </p>
+
+        <p>
+            And the calling to teach became an invitation to share
+            what I had learned—not only through words, but through
+            the life I was trying to live.
+        </p>
+
+    </div><div class="page-number">17</div></div></section></div>
+<div class="sheet" data-sheet="9"><section class="face front" aria-label="Page 18"><div class="page-content"><div>
+
+        <p>
+            Then something remarkable began to happen.
+        </p>
+
+        <p>
+            The things I understood as God's calling gradually
+            began to become real.
+        </p>
+
+        <p>
+            Doors opened. Opportunities came. Resources appeared
+            when they were needed. God provided people, circumstances,
+            skills, and opportunities that allowed me to do things
+            I once thought were beyond my ability.
+        </p>
+
+        <p>
+            I began to realize that the promise I had made during
+            my darkest period was becoming a reality.
+        </p>
+
+        <p>
+            I had told God that if He healed me, I would serve Him
+            throughout my life.
+        </p>
+
+        <p>
+            And as the years passed, I found myself becoming more
+            committed to doing exactly that.
+        </p>
+
+    </div><div class="page-number">18</div></div></section><section class="face back" aria-label="Page 19"><div class="page-content"><div>
+
+        <p>
+            One of the clearest expressions of this calling became charity.
+        </p>
+
+        <p>
+            I learned that serving God is not only about speaking
+            about faith. It is also about putting faith into action.
+        </p>
+
+        <p>
+            Whenever I had the opportunity to help someone, I wanted
+            to help. Whenever I had something that could be shared,
+            I wanted to share it. Whenever I encountered someone
+            who was struggling, I wanted to respond with compassion.
+        </p>
+
+        <p>
+            The caregiver in me learned to care.
+        </p>
+
+        <p>
+            The person who had experienced suffering learned to understand.
+        </p>
+
+        <p>
+            The person who had been rescued learned to be grateful.
+        </p>
+
+    </div><div class="page-number">19</div></div></section></div>
+<div class="sheet" data-sheet="10"><section class="face front" aria-label="Page 20"><div class="page-content"><div>
+
+        <p>
+            And the person who had once asked God for another chance
+            began to understand that this second chance was not meant
+            only for himself.
+        </p>
+
+        <p>
+            It was meant to be shared.
+        </p>
+
+        <p>
+            Looking back, I can see a connection between the different
+            chapters of my life.
+        </p>
+
+        <p>
+            My childhood experiences shaped my character.
+        </p>
+
+        <p>
+            My years of struggle taught me humility.
+        </p>
+
+        <p>
+            My recovery brought me closer to God.
+        </p>
+
+    </div><div class="page-number">20</div></div></section><section class="face back" aria-label="Page 21"><div class="page-content"><div>
+
+        <p>
+            My prayer life revealed a calling.
+        </p>
+
+        <p>
+            My education gave me tools.
+        </p>
+
+        <p>
+            My work gave me opportunities to meet people.
+        </p>
+
+        <p>
+            And God's grace gave me opportunities to serve.
+        </p>
+
+        <p>
+            I did not understand all of this when I was young.
+        </p>
+
+        <p>
+            But now I can look back and see that the road was being
+            prepared one step at a time.
+        </p>
+
+        <p>
+            God was not finished with me.
+        </p>
+
+        <p>
+            He was preparing me for a mission.
+        </p>
+
+        <P>
+            Proverbs 3:5–6
+        </P>
+
+        <P>
+            "Trust in the Lord with all your heart, 
+            and do not lean on your own understanding.
+            In all your ways acknowledge him, 
+            and he will make straight your paths."
+        </P>
+
+    </div><div class="page-number">21</div></div></section></div>
+<div class="sheet" data-sheet="11"><section class="face front" aria-label="Page 22"><div class="page-content"><div>
+
+        <h3>CHAPTER IV</h3>
+
+        <h2>LIVE</h2>
+
+        <p>
+            That was the first word I understood in those moments
+            of prayer.
+        </p>
+
+        <p>
+            When I look back at my past, I cannot say that my life
+            was always good. There were wrong decisions, failures,
+            and mistakes that brought consequences into my life.
+            There were moments when I felt that I was ruining the
+            very life I had been given.
+        </p>
+
+        <p>
+            Because of substance abuse, I almost failed to finish
+            my education. I was hospitalized, and the road to
+            recovery was difficult. I had to learn how to cope with
+            the consequences of my choices and slowly rebuild myself.
+        </p>
+
+        <p>
+            There were broken relationships and dreams that did not
+            come true.
+        </p>
+
+    </div><div class="page-number">22</div></div></section><section class="face back" aria-label="Page 23"><div class="page-content"><div>
+
+        <p>
+            Our family's economic stability also declined. Our
+            business eventually closed, and life became more difficult.
+            We had to find ways to make ends meet.
+        </p>
+
+        <p>
+            Even in my working life, stability was not always easy
+            to find. There were jobs that I could not remain in for
+            long because of different circumstances. I experienced
+            working graveyard shifts and the difficulties that came
+            with them.
+        </p>
+
+        <p>
+            When I tried to work from home, there were also practical
+            limitations. I did not always have the technology I needed—
+            high-specification computers, reliable equipment, or
+            adequate power backups. These may seem like small things
+            to some people, but when you are trying to survive and
+            build something, they can become very real obstacles.
+        </p>
+
+        <p>
+            It was a hard battle simply to live.
+        </p>
+
+    </div><div class="page-number">23</div></div></section></div>
+<div class="sheet" data-sheet="12"><section class="face front" aria-label="Page 24"><div class="page-content"><div>
+
+        <p>
+            And beyond the struggles of daily life, I also felt the
+            weight of serving the Lord.
+        </p>
+
+        <p>
+            To follow a mission of faith is not always easy. There are
+            moments when fear comes. There are moments when you
+            anticipate pain, suffering, rejection, and sacrifice. You
+            see good people placed at a disadvantage because they are
+            willing to take risks for what they believe in.
+        </p>
+
+        <p>
+            Sometimes you ask yourself:
+        </p>
+
+        <p>
+            <em>How can I continue when life itself is already so difficult?</em>
+        </p>
+
+        <p>
+            I had many reasons to give up.
+        </p>
+
+        <p>
+            But during those moments, I felt God speaking to my heart:
+        </p>
+
+        <p>
+            “Live.”
+        </p>
+
+    </div><div class="page-number">24</div></div></section><section class="face back" aria-label="Page 25"><div class="page-content"><div>
+
+        <p>
+            At first, I thought the word simply meant surviving.
+        </p>
+
+        <p>
+            But as I reflected on it, I began to understand something deeper.
+        </p>
+
+        <p>
+            God was reminding me that my life still had a purpose.
+        </p>
+
+        <p>
+            I had made mistakes, but my mistakes did not have to become
+            the final chapter of my story.
+        </p>
+
+        <p>
+            I had experienced failure, but failure did not mean that my
+            life had failed.
+        </p>
+
+        <p>
+            I had lost opportunities, relationships, dreams, and stability,
+            but I was still here.
+        </p>
+
+        <p>
+            I was alive.
+        </p>
+
+    </div><div class="page-number">25</div></div></section></div>
+<div class="sheet" data-sheet="13"><section class="face front" aria-label="Page 26"><div class="page-content"><div>
+
+        <p>
+            And if God had allowed me to come through those difficult
+            years, then perhaps He was telling me not merely to survive,
+            but to live with purpose.
+        </p>
+
+        <p>
+            To live meant to rise again.
+        </p>
+
+        <p>
+            To live meant to continue learning.
+        </p>
+
+        <p>
+            To live meant to care for my family.
+        </p>
+
+        <p>
+            To live meant to serve others.
+        </p>
+
+        <p>
+            To live meant to use whatever gifts and opportunities God
+            placed before me.
+        </p>
+
+    </div><div class="page-number">26</div></div></section><section class="face back" aria-label="Page 27"><div class="page-content"><div>
+
+        <p>
+            To live meant not allowing my past to define the future
+            God might still have for me.
+        </p>
+
+        <p>
+            The word became a reminder that the life I once thought
+            I had wasted could still become a life of service.
+        </p>
+
+        <p>
+            I began to see my survival differently.
+        </p>
+
+        <p>
+            It was not simply about keeping myself alive.
+        </p>
+
+        <p>
+            It was about discovering why I was still alive.
+        </p>
+
+        <p>
+            And slowly, I understood that perhaps the answer was
+            connected to the promise I had made years before:
+        </p>
+
+        <p>
+            If God healed me, I would serve Him throughout my life.
+        </p>
+
+    </div><div class="page-number">27</div></div></section></div>
+<div class="sheet" data-sheet="14"><section class="face front" aria-label="Page 28"><div class="page-content"><div>
+
+        <p>
+            God had brought me through the darkness.
+        </p>
+
+        <p>
+            Now He was teaching me how to live in the light.
+        </p>
+
+        <p>
+            <strong>Live.</strong>
+        </p>
+
+        <p>
+            That was where the next chapter of my calling began.
+        </p>
+
+        <P>
+            Galatians 2:20
+        </P>
+
+        <P>
+            
+            "I have been crucified with Christ. It is no longer I who live, 
+            but Christ who lives in me. 
+            And the life I now live in the flesh I live by faith in the Son of God, 
+            who loved me and gave himself for me."
+        </P>
+
+    </div><div class="page-number">28</div></div></section><section class="face back" aria-label="Page 29"><div class="page-content"><div>
+
+        <h3>CHAPTER V</h3>
+
+        <h2>LEAD</h2>
+
+        <p>
+            After learning to live again, I began to understand the second word.
+        </p>
+
+        <p>
+            But leading was not easy for me.
+        </p>
+
+        <p>
+            Many times, I was engulfed by fear. The fear often came whenever
+            I felt that I needed to do something good, speak for the truth,
+            or stand against something that I believed was wrong.
+        </p>
+
+        <p>
+            I would think about the consequences.
+        </p>
+
+        <p>
+            I knew that speaking the truth could affect people—especially
+            when someone's interests, livelihood, or ability to make large
+            amounts of money were involved. Some people may depend on those
+            activities for survival. Others may pursue easy money or wealth
+            at the expense of other people's lives and well-being.
+        </p>
+
+    </div><div class="page-number">29</div></div></section></div>
+<div class="sheet" data-sheet="15"><section class="face front" aria-label="Page 30"><div class="page-content"><div>
+
+        <p>
+            Sometimes, the consequences can be devastating. People can
+            be pushed into lives of darkness, exploited, or even lose
+            their lives.
+        </p>
+
+        <p>
+            Knowing these realities made me afraid.
+        </p>
+
+        <p>
+            I was not really ready to come forward as a disciple of God.
+        </p>
+
+        <p>
+            I looked at myself and thought:
+        </p>
+
+        <p>
+            “Who am I to lead?”
+        </p>
+
+        <p>
+            I did not believe I had the talents or gifts necessary to
+            serve the Lord. I did not see myself as someone special.
+            I was simply a person who had already experienced failure,
+            made mistakes, struggled to survive, and was still trying
+            to rebuild his own life.
+        </p>
+
+        <p>
+            How could someone like me lead others?
+        </p>
+
+    </div><div class="page-number">30</div></div></section><section class="face back" aria-label="Page 31"><div class="page-content"><div>
+
+        <p>
+            But God was teaching me that leadership in His service is not
+            necessarily about having extraordinary abilities.
+        </p>
+
+        <p>
+            Sometimes, leadership begins with the willingness to stand
+            when others are afraid to stand.
+        </p>
+
+        <p>
+            It begins with speaking when silence would be easier.
+        </p>
+
+        <p>
+            It begins with choosing what is right even when doing so may
+            come with a cost.
+        </p>
+
+        <p>
+            And in the midst of my fear, I felt God telling me:
+        </p>
+
+        <p>
+            “Lead.”
+        </p>
+
+        <p>
+            Then God began to reveal His power and might to me. His divine
+            presence and intervention strengthened me and convinced me to
+            trust in Him fully.
+        </p>
+
+    </div><div class="page-number">31</div></div></section></div>
+<div class="sheet" data-sheet="16"><section class="face front" aria-label="Page 32"><div class="page-content"><div>
+
+        <p>
+            I reached a point where I could only say:
+        </p>
+
+        <p>
+            “Yes, God. My life is now in You, Lord.”
+        </p>
+
+        <p>
+            I began to understand that He is our Creator, the One who
+            made all things. If I truly believed that, then I had to
+            trust Him not only with my life, but also with the mission
+            He was placing before me.
+        </p>
+
+        <p>
+            And in prayer, I understood another part of His calling:
+        </p>
+
+        <p>
+            “Lead them to be closer to Me.”
+        </p>
+
+        <p>
+            Those words changed how I understood leadership.
+        </p>
+
+        <p>
+            God was not asking me to lead people toward myself.
+        </p>
+
+        <p>
+            He was asking me to lead them closer to Him.
+        </p>
+
+    </div><div class="page-number">32</div></div></section><section class="face back" aria-label="Page 33"><div class="page-content"><div>
+
+        <p>
+            I did not have to become the center of their lives. Jesus had
+            to remain at the center.
+        </p>
+
+        <p>
+            I did not have to take credit for what God would accomplish.
+            I only needed to become willing to be used as an instrument
+            of His work.
+        </p>
+
+        <p>
+            I began to understand that leadership in God's service is not
+            about being above others.
+        </p>
+
+        <p>
+            It is about walking with them.
+        </p>
+
+        <p>
+            To lead is to point toward what is good and true.
+        </p>
+
+        <p>
+            To lead is to serve.
+        </p>
+
+        <p>
+            To lead is to have the courage to speak when speaking is
+            necessary, but also the humility to listen when listening
+            is needed.
+        </p>
+
+    </div><div class="page-number">33</div></div></section></div>
+<div class="sheet" data-sheet="17"><section class="face front" aria-label="Page 34"><div class="page-content"><div>
+
+        <p>
+            And most importantly, to lead is to recognize that Jesus
+            must remain ahead of me.
+        </p>
+
+        <p>
+            I am not the destination.
+        </p>
+
+        <p>
+            I am not the source.
+        </p>
+
+        <p>
+            I am only a fellow traveler pointing toward the One who
+            leads us all.
+        </p>
+
+        <p>
+            That is why the word “Lead” became inseparable from the
+            word “Live.”
+        </p>
+
+        <p>
+            God first taught me to live again.
+        </p>
+
+        <p>
+            Then He began teaching me how to lead—not by my own
+            strength, but by trusting Him.
+        </p>
+
+        <p>
+            Live.
+        </p>
+
+        <p>
+            Lead.
+        </p>
+
+        <P>
+            Joshua 1:9
+        </P>
+           
+        <P>
+            "Have I not commanded you? Be strong and courageous. 
+            Do not be frightened, and do not be dismayed, 
+            for the Lord your God is with you wherever you go."  
+        </P>
+
+    </div><div class="page-number">34</div></div></section><section class="face back" aria-label="Page 35"><div class="page-content"><div>
+
+        <h3>CHAPTER VI</h3>
+
+        <h2>I WILL MAKE YOU A TEACHER</h2>
+
+        <p>
+            And then came the third part of the calling:
+        </p>
+
+        <p>
+            “I will make you a teacher.”
+        </p>
+
+        <p>
+            Though God's grace and blessings continue to sustain me,
+            life can still be hard. There are moments when we do not
+            know what tomorrow will bring. Yet somehow, God provides
+            what we need—sometimes just enough to survive the moment,
+            continue the journey, and face another day.
+        </p>
+
+        <p>
+            I have learned to <strong>live a life of trust in God's
+            providence</strong>.
+        </p>
+
+    </div><div class="page-number">35</div></div></section></div>
+<div class="sheet" data-sheet="18"><section class="face front" aria-label="Page 36"><div class="page-content"><div>
+
+        <p>
+            When I said yes to God, I dedicated my life to serving Him
+            with whatever capacity I have. I wanted to use the talents
+            and gifts He had given me to follow His will, to bring His
+            presence closer to people, and to help them know Him more
+            deeply.
+        </p>
+
+        <p>
+            My desire is to help build a reality in which people can
+            develop a closer relationship with Almighty God—to discover
+            how faithful and loving He is.
+        </p>
+
+        <p>
+            That knowledge of God's faithfulness keeps me going.
+        </p>
+
+        <p>
+            As I placed my trust in Jesus, I began to see how He
+            provided the things I needed to put the mission into action.
+            My journey became more fruitful, not because everything
+            became easy, but because I learned to recognize God's
+            providence along the way.
+        </p>
+
+        <p>
+            One of the clearest expressions of this became
+            <strong>charity</strong>.
+        </p>
+
+    </div><div class="page-number">36</div></div></section><section class="face back" aria-label="Page 37"><div class="page-content"><div>
+
+        <p>
+            To me, charity is another name for love.
+        </p>
+
+        <p>
+            And love is not merely a noun.
+        </p>
+
+        <p>
+            <strong>Love is a verb.</strong>
+        </p>
+
+        <p>
+            Love must be lived. It must be expressed through action.
+        </p>
+
+        <p>
+            It is seen when we help someone who is struggling, when we
+            give what we can, when we listen, when we care, and when we
+            choose to serve even when no one is watching.
+        </p>
+
+        <p>
+            But as my journey continued, another question remained in
+            my heart:
+        </p>
+
+        <p>
+            <strong>“Lord, what should I do now?”</strong>
+        </p>
+
+        <p>
+            I needed God to enlighten me. I wanted my decisions to be
+            aligned with His divine plan. I did not want to simply do
+            what I thought was good; I wanted to understand what He
+            wanted me to do.
+        </p>
+
+    </div><div class="page-number">37</div></div></section></div>
+<div class="sheet" data-sheet="19"><section class="face front" aria-label="Page 38"><div class="page-content"><div>
+
+        <p>
+            Then, during prayer, I felt those words come to me:
+        </p>
+
+        <p>
+            <strong>“I will make you a teacher.”</strong>
+        </p>
+
+        <p>
+            At first, I did not fully understand what that meant.
+        </p>
+
+        <p>
+            How could I become a teacher?
+        </p>
+
+        <p>
+            I had not planned my life around becoming one. I did not
+            know where this calling would lead.
+        </p>
+
+        <p>
+            But I learned to trust God before I could see the complete
+            answer.
+        </p>
+
+        <p>
+            And eventually, I began to see it fulfilled.
+        </p>
+
+        <p>
+            <strong>Miracles do happen.</strong>
+        </p>
+
+    </div><div class="page-number">38</div></div></section><section class="face back" aria-label="Page 39"><div class="page-content"><div>
+
+        <p>
+            The calling to teach began to take shape in ways I could
+            not have planned for myself.
+        </p>
+
+        <p>
+            Whether through mission work or through my profession,
+            whether I was working to earn an income and support my
+            family or serving others through charity, I began to realize
+            that every experience carries a lesson.
+        </p>
+
+        <p>
+            Life itself became a classroom.
+        </p>
+
+        <p>
+            Every struggle can teach us something.
+        </p>
+
+        <p>
+            Every failure can teach us something.
+        </p>
+
+        <p>
+            Every blessing can teach us something.
+        </p>
+
+        <p>
+            Every person we encounter can teach us something.
+        </p>
+
+        <p>
+            And through these experiences, we can learn more about who
+            God is and how He works in our lives.
+        </p>
+
+    </div><div class="page-number">39</div></div></section></div>
+<div class="sheet" data-sheet="20"><section class="face front" aria-label="Page 40"><div class="page-content"><div>
+
+        <p>
+            If I am able to share these experiences with others, perhaps
+            they too can discover something about God's faithfulness,
+            His mercy, and His love.
+        </p>
+
+        <p>
+            This is how I understand being a teacher according to the
+            calling I received.
+        </p>
+
+        <p>
+            I am not the source of wisdom.
+        </p>
+
+        <p>
+            <strong>God is.</strong>
+        </p>
+
+        <p>
+            I am only an instrument.
+        </p>
+
+        <p>
+            He is the source of the strength, wisdom, opportunities,
+            talents, and gifts that allow me to serve.
+        </p>
+
+        <p>
+            He provides what we need to become alive—not only in the
+            physical world in which we live, but also
+            <strong>alive in the Spirit</strong>.
+        </p>
+
+    </div><div class="page-number">40</div></div></section><section class="face back" aria-label="Page 41"><div class="page-content"><div>
+
+        <p>
+            And so I continue this journey with trust.
+        </p>
+
+        <p>
+            I live because God gave me another chance.
+        </p>
+
+        <p>
+            I lead because He taught me not to be ruled by fear.
+        </p>
+
+        <p>
+            And I teach because He told me:
+        </p>
+
+        <p>
+            <strong>“I will make you a teacher.”</strong>
+        </p>
+
+        <p>
+            Whatever I have learned, whatever I have received, and
+            whatever I am able to give, I offer back to Him.
+        </p>
+
+        <p>
+            May everything I do bring people closer to God and
+            ultimately give <strong>glory to His name</strong>.
+        </p>
+
+        <P>
+            Matthew 5:14–16
+        </P>
+
+        <P>
+            "You are the light of the world. 
+            A city set on a hill cannot be hidden... In the same way, 
+            let your light shine before others, 
+            so that they may see your good works 
+            and give glory to your Father who is in heaven."
+        </P>
+
+    </div><div class="page-number">41</div></div></section></div>
+<div class="sheet" data-sheet="21"><section class="face front" aria-label="Page 42"><div class="page-content"><div>
+
+        <h3>CHAPTER VII</h3>
+
+        <h2>WHEN THE PROMISE BECAME REALITY</h2>
+
+        <p>
+            At the time when I was trying to understand what God meant
+            when He told me, <strong>“I will make you a teacher,”</strong>
+            I was working as a Customer Service Representative for
+            <strong>T-Mobile</strong>, a telecommunications company
+            based in the United States.
+        </p>
+
+        <p>
+            I had already spent nearly six years working in the BPO
+            industry, handling different accounts, including
+            travel-related accounts and telecommunications companies.
+        </p>
+
+        <p>
+            The work environment could be fun and fulfilling, and I met
+            many good people along the way. But the pressure and demands
+            of the job eventually took their toll on me. I became burned
+            out and demotivated.
+        </p>
+
+        <p>
+            Working the graveyard shift made it even more difficult to
+            maintain that kind of life for a long time.
+        </p>
+
+        <p>
+            I was simply trying to continue working, earn an income,
+            and support our needs.
+        </p>
+
+    </div><div class="page-number">42</div></div></section><section class="face back" aria-label="Page 43"><div class="page-content"><div>
+
+        <p>
+            Then something happened that I did not plan.
+        </p>
+
+        <p>
+            One day, I came across an online opportunity for
+            <strong>ESL teaching</strong>. I decided to apply.
+        </p>
+
+        <p>
+            I did not know at that time that this simple decision
+            would become an answer to a prayer.
+        </p>
+
+        <p>
+            By the grace of God, I was accepted. After going through
+            a series of training sessions, I began working as an online
+            English tutor.
+        </p>
+
+        <p>
+            At first, I simply saw it as another opportunity to work.
+        </p>
+
+        <p>
+            But somewhere in the middle of my experience as an English
+            tutor, something began to become clear to me.
+        </p>
+
+        <p>
+            I started to realize that perhaps God was drawing me into
+            His plan.
+        </p>
+
+        <p>
+            The word He had placed in my heart during prayer came back
+            to me:
+        </p>
+
+        <p>
+            <strong>“I will make you a teacher.”</strong>
+        </p>
+
+    </div><div class="page-number">43</div></div></section></div>
+<div class="sheet" data-sheet="22"><section class="face front" aria-label="Page 44"><div class="page-content"><div>
+
+        <p>
+            Then another opportunity came.
+        </p>
+
+        <p>
+            I also became a <strong>catechist</strong>.
+        </p>
+
+        <p>
+            Now my students were calling me <strong>“Teacher.”</strong>
+        </p>
+
+        <p>
+            At that moment, something inside me became clear.
+        </p>
+
+        <p>
+            For a long time, I had wondered what kind of teacher God
+            wanted me to become.
+        </p>
+
+        <p>
+            Was He calling me to become a teacher of His Word?
+        </p>
+
+        <p>
+            Was He calling me to become a teacher as a profession?
+        </p>
+
+        <p>
+            Or was there another purpose behind the word He had given me?
+        </p>
+
+        <p>
+            Honestly, I doubted that it would ever happen.
+        </p>
+
+    </div><div class="page-number">44</div></div></section><section class="face back" aria-label="Page 45"><div class="page-content"><div>
+
+        <p>
+            But God answered my doubt in a way I could not have planned
+            for myself.
+        </p>
+
+        <p>
+            He allowed me to become a teacher professionally, while also
+            giving me opportunities to teach and share His Word through
+            catechesis and mission.
+        </p>
+
+        <p>
+            I began to understand that perhaps God was not asking me to
+            choose between the two.
+        </p>
+
+        <p>
+            He was showing me that
+            <strong>teaching could become part of the way I serve Him
+            in every area of my life.</strong>
+        </p>
+
+        <p>
+            My profession could become a means of service.
+        </p>
+
+        <p>
+            My faith could become something I teach through words and
+            actions.
+        </p>
+
+        <p>
+            My experiences could become lessons.
+        </p>
+
+        <p>
+            And my life itself could become a testimony.
+        </p>
+
+    </div><div class="page-number">45</div></div></section></div>
+<div class="sheet" data-sheet="23"><section class="face front" aria-label="Page 46"><div class="page-content"><div>
+
+        <p>
+            Looking back, I see this as one of the moments when God's
+            promise became visible in my life.
+        </p>
+
+        <p>
+            I did not make it happen by my own strength.
+        </p>
+
+        <p>
+            I did not plan the whole journey.
+        </p>
+
+        <p>
+            One opportunity led to another, and slowly I began to
+            recognize God's hand guiding me.
+        </p>
+
+        <p>
+            <strong>He fulfilled what He had told me.</strong>
+        </p>
+
+        <p>
+            God wanted to show me that He is faithful—that when He makes
+            a promise according to His divine plan, He can bring it to
+            fulfillment in ways we may never expect.
+        </p>
+
+        <p>
+            I am now a teacher—not necessarily in the way I once
+            imagined, but in the way God allowed me to become one.
+        </p>
+
+    </div><div class="page-number">46</div></div></section><section class="face back" aria-label="Page 47"><div class="page-content"><div>
+
+        <p>
+            I teach through my profession.
+        </p>
+
+        <p>
+            I teach through my faith.
+        </p>
+
+        <p>
+            I teach through my experiences.
+        </p>
+
+        <p>
+            I teach through service.
+        </p>
+
+        <p>
+            And I teach through the lessons God continues to give me.
+        </p>
+
+        <p>
+            The teacher I have become is not something I claim as my own
+            achievement.
+        </p>
+
+        <p>
+            It is part of the testimony of what God has done in my life.
+        </p>
+
+        <p>
+            <strong>He said, “I will make you a teacher.”</strong>
+        </p>
+
+        <p>
+            <strong>And He did.</strong>
+        </p>
+
+        <P>
+            Philippians 1:6  
+        </P>
+
+        <P>
+            
+            "And I am sure of this, 
+            that he who began a good work in you will 
+            bring it to completion at the day of Jesus Christ." 
+        </P>
+
+    </div><div class="page-number">47</div></div></section></div>
+<div class="sheet" data-sheet="24"><section class="face front" aria-label="Page 48"><div class="page-content"><div>
+
+        <h2>PART TWO</h2>
+
+        <h1>THE JOURNEY BEGINS</h1>
+
+        <p>8. The Mission During the Pandemic</p>
+
+        <p>9. The Good Provider</p>
+
+        <p>10. The Street Dwellers</p>
+
+    </div><div class="page-number">48</div></div></section><section class="face back" aria-label="Page 49"><div class="page-content"><div>
+
+        <h3>CHAPTER VIII</h3>
+
+        <h2>THE MISSION DURING THE PANDEMIC</h2>
+
+        <p>
+            It was during the time of the pandemic when people were
+            struggling just to survive. Families were trying to protect
+            themselves from the virus while, at the same time, worrying
+            about how they would put food on the table.
+        </p>
+
+        <p>
+            Lockdowns and quarantines were implemented across the country.
+            Businesses and companies began closing. Many people lost their
+            jobs and their sources of income. For many families, the
+            situation became a matter of survival.
+        </p>
+
+        <p>
+            As unemployment increased, the crisis brought not only
+            economic hardship but also fear, anxiety, and hopelessness.
+            People began wondering where their next meal would come from.
+            Mental health was also greatly challenged as people struggled
+            to cope with uncertainty and isolation.
+        </p>
+
+        <p>
+            During this difficult time, communities began organizing
+            Community Pantries throughout the country, including here in
+            our city of Bacolod. People who had something to share began
+            giving from what they had. Those who had more offered their
+            blessings to those who had less.
+        </p>
+
+        <p>
+            The idea was simple: Take what you need, and give what you can.
+        </p>
+
+    </div><div class="page-number">49</div></div></section></div>
+<div class="sheet" data-sheet="25"><section class="face front" aria-label="Page 50"><div class="page-content"><div>
+
+        <p>
+            People who had little or no food on their tables could come
+            and receive food according to their needs. It was a beautiful
+            expression of compassion and solidarity during one of the most
+            difficult periods of our lives.
+        </p>
+
+        <p>
+            Inspired by God's prompting and the calling I had received
+            to serve, I felt that I should do something more.
+        </p>
+
+        <p>
+            I decided to organize a mobile pantry.
+        </p>
+
+        <p>
+            Together with some friends who volunteered to help me, we
+            prepared food packs and brought them to people we encountered
+            along the streets and roads of Bacolod City.
+        </p>
+
+        <p>
+            But there was one problem.
+        </p>
+
+        <p>
+            I did not have a large amount of personal money to finance
+            this charitable mission.
+        </p>
+
+        <p>
+            So I simply trusted the Lord.
+        </p>
+
+        <p>
+            I believed that if this mission was truly inspired by God,
+            He would provide a way for it to happen.
+        </p>
+
+    </div><div class="page-number">50</div></div></section><section class="face back" aria-label="Page 51"><div class="page-content"><div>
+
+        <p>
+            I started an online campaign and used the gifts and talents
+            that God had given me. I composed a song and sang it online
+            as part of the campaign. Through that song, I shared the
+            purpose of the mission and invited my friends on social media
+            to become Sharers in this work.
+        </p>
+
+        <p>
+            Then something beautiful happened.
+        </p>
+
+        <p>
+            Responses began coming from people around the world,
+            especially from Overseas Filipino Workers (OFWs). Some of
+            them were people I knew. Some were my former classmates.
+            And some were complete strangers who simply believed in the
+            mission and wanted to help.
+        </p>
+
+        <p>
+            Little by little, the donations came.
+        </p>
+
+        <p>
+            I did not receive an enormous amount of money, but I received
+            just enough to complete the mission.
+        </p>
+
+        <p>
+            For me, that was already a miracle.
+        </p>
+
+        <p>
+            It reminded me that God's work does not always begin with
+            abundant resources. Sometimes, it begins with a willing heart,
+            a little faith, and the courage to take the first step.
+        </p>
+
+    </div><div class="page-number">51</div></div></section></div>
+<div class="sheet" data-sheet="26"><section class="face front" aria-label="Page 52"><div class="page-content"><div>
+
+        <p>
+            We prepared the food packs and traveled through the streets
+            and roads of the city, looking for people who were struggling.
+        </p>
+
+        <p>
+            Many of the people we encountered were drivers—those
+            operating e-bikes, jeepneys, taxis, and tricycles. They were
+            among those whose livelihoods had been severely affected by
+            the pandemic.
+        </p>
+
+        <p>
+            But I did not want to simply hand them food and leave.
+        </p>
+
+        <p>
+            I wanted to hear them.
+        </p>
+
+        <p>
+            I would ask them:
+        </p>
+
+        <p>
+            “If you could ask God for three things that you need in your
+            life right now, what would they be?”
+        </p>
+
+        <p>
+            They would tell me their answers.
+        </p>
+
+        <p>
+            Then I would pray with them.
+        </p>
+
+        <p>
+            I would ask God to provide for their needs, to protect their
+            families, to strengthen their faith, and to give them hope
+            during those uncertain times.
+        </p>
+
+    </div><div class="page-number">52</div></div></section><section class="face back" aria-label="Page 53"><div class="page-content"><div>
+
+        <p>
+            The food was important.
+        </p>
+
+        <p>
+            But I realized that the prayer was just as important.
+        </p>
+
+        <p>
+            We were not only bringing food to hungry people.
+        </p>
+
+        <p>
+            We were bringing the love of Christ to people who needed to
+            know that they were not forgotten.
+        </p>
+
+        <p>
+            I could see the happiness in their faces. Some of them seemed
+            surprised that someone would stop and listen to their
+            struggles. Others became emotional when we prayed together.
+        </p>
+
+        <p>
+            And in those moments, I saw something greater than the food
+            we had distributed.
+        </p>
+
+        <p>
+            I saw hope returning to their hearts.
+        </p>
+
+        <p>
+            They became reminded that there is a God who sees them.
+        </p>
+
+        <p>
+            There is a God who hears their prayers.
+        </p>
+
+        <p>
+            There is a God who cares about their families.
+        </p>
+
+        <p>
+            And there is a God who loves them.
+        </p>
+
+    </div><div class="page-number">53</div></div></section></div>
+<div class="sheet" data-sheet="27"><section class="face front" aria-label="Page 54"><div class="page-content"><div>
+
+        <p>
+            Jesus Christ.
+        </p>
+
+        <p>
+            That was when I began to understand more deeply what it meant
+            to be a missionary.
+        </p>
+
+        <p>
+            A missionary does not always need a church building, a large
+            organization, or abundant resources.
+        </p>
+
+        <p>
+            Sometimes, a missionary simply needs to be willing to go
+            where people are.
+        </p>
+
+        <p>
+            To listen.
+        </p>
+
+        <p>
+            To serve.
+        </p>
+
+        <p>
+            To pray.
+        </p>
+
+        <p>
+            To share.
+        </p>
+
+        <p>
+            And most importantly—
+        </p>
+
+        <p>
+            to bring Christ's love to those who need it most.
+        </p>
+
+        <p>
+            The journey had begun.
+        </p>
+
+        <P>
+            Psalm 91:5–6
+        </P>
+
+        <P>
+            "You will not fear the terror of the night, 
+            nor the arrow that flies by day, 
+            nor the pestilence that stalks in darkness, 
+            nor the destruction that wastes at noonday."
+        </P>
+
+    </div><div class="page-number">54</div></div></section><section class="face back" aria-label="Page 55"><div class="page-content"><div>
+
+        <h3>CHAPTER IX</h3>
+
+        <h2>THE GOOD PROVIDER</h2>
+
+        <p>
+            When God calls us to a mission, He provides.
+        </p>
+
+        <p>
+            He is the Good Provider and the Good Shepherd who is entrusted
+            with the care of His flock. He does not only provide physical
+            food for His people; He also desires to feed them with spiritual
+            food—the nourishment of His Word, His love, and His presence.
+        </p>
+
+        <p>
+            I have learned that when God places something in our hearts
+            and reveals His purpose through His divine intervention, He
+            also knows how to affirm it.
+        </p>
+
+        <p>
+            At that time, the opening of classes was approaching. It was
+            still a post-pandemic period, and many families were struggling
+            to recover economically. Parents were trying to find ways to
+            finance their children's education and provide the school
+            supplies they needed.
+        </p>
+
+        <p>
+            Once again, I felt prompted to do something.
+        </p>
+
+    </div><div class="page-number">55</div></div></section></div>
+<div class="sheet" data-sheet="28"><section class="face front" aria-label="Page 56"><div class="page-content"><div>
+
+        <p>
+            We organized another campaign—not this time to distribute
+            food, but to help children return to school with something
+            they could use.
+        </p>
+
+        <p>
+            Our mission was simple.
+        </p>
+
+        <p>
+            We wanted to provide each grade-school student with one
+            sheet of writing paper, while also giving teachers a few
+            ballpens that they could use for checking quizzes and monthly
+            examinations.
+        </p>
+
+        <p>
+            It may have seemed like a small thing.
+        </p>
+
+        <p>
+            But to the children and teachers who received them, it was
+            an expression of love.
+        </p>
+
+        <p>
+            And once again, God showed His generosity.
+        </p>
+
+        <p>
+            He provided what was needed and made the mission possible.
+        </p>
+
+        <p>
+            But God had something more in store for me that day.
+        </p>
+
+    </div><div class="page-number">56</div></div></section><section class="face back" aria-label="Page 57"><div class="page-content"><div>
+
+        <p>
+            He gave me an opportunity not only to give school supplies,
+            but also to teach the children a simple lesson about listening.
+        </p>
+
+        <p>
+            I asked the students to raise both of their hands and form
+            them into the shape of ears. Then I asked them to bring their
+            hands together.
+        </p>
+
+        <p>
+            I asked them:
+        </p>
+
+        <p>
+            “What do you see?”
+        </p>
+
+        <p>
+            They answered:
+        </p>
+
+        <p>
+            “A heart!”
+        </p>
+
+        <p>
+            I smiled and told them:
+        </p>
+
+        <p>
+            “Listen to your teachers not only with your ears, but also
+            with your heart.”
+        </p>
+
+        <p>
+            I wanted them to understand that listening is not simply about
+            hearing words. True listening involves respect, understanding,
+            and love.
+        </p>
+
+    </div><div class="page-number">57</div></div></section></div>
+<div class="sheet" data-sheet="29"><section class="face front" aria-label="Page 58"><div class="page-content"><div>
+
+        <p>
+            I also encouraged them to love and appreciate their teachers.
+        </p>
+
+        <p>
+            This reminded me of what Jesus teaches us—to love God and to
+            love our neighbors as ourselves.
+        </p>
+
+        <p>
+            What began as a simple distribution of school supplies became
+            a joyful and meaningful activity.
+        </p>
+
+        <p>
+            There was another beautiful moment for me that day.
+        </p>
+
+        <p>
+            I encountered some of the teachers who had taught me when I
+            was still a young student.
+        </p>
+
+        <p>
+            Seeing them again brought back many memories.
+        </p>
+
+        <p>
+            Deep inside me was a profound sense of gratitude.
+        </p>
+
+        <p>
+            These teachers had once guided me, corrected me, encouraged
+            me, and helped shape the person I eventually became.
+        </p>
+
+        <p>
+            When I embraced one of my former teachers, that hug became
+            more than a greeting.
+        </p>
+
+        <p>
+            It was my way of saying:
+        </p>
+
+        <p>
+            “Thank you.”
+        </p>
+
+    </div><div class="page-number">58</div></div></section><section class="face back" aria-label="Page 59"><div class="page-content"><div>
+
+        <p>
+            Thank you to all the teachers who helped shape our lives.
+        </p>
+
+        <p>
+            Thank you for your patience.
+        </p>
+
+        <p>
+            Thank you for your sacrifices.
+        </p>
+
+        <p>
+            Thank you for believing in your students.
+        </p>
+
+        <p>
+            And thank you for helping us become better people.
+        </p>
+
+        <p>
+            Some of the people who became Sharers in this mission were
+            my former classmates who were already living and working in
+            the United States.
+        </p>
+
+        <p>
+            I shared their generosity with the students and told them
+            that one day, they too could grow up, pursue their dreams,
+            and build a successful and brighter future.
+        </p>
+
+        <p>
+            I told the children that the people who were helping them
+            today had once been students just like them.
+        </p>
+
+        <p>
+            The students responded with joyful voices, expressing their
+            gratitude for the gifts they had received.
+        </p>
+
+    </div><div class="page-number">59</div></div></section></div>
+<div class="sheet" data-sheet="30"><section class="face front" aria-label="Page 60"><div class="page-content"><div>
+
+        <p>
+            For me, that moment was deeply meaningful.
+        </p>
+
+        <p>
+            The mission was no longer simply about giving paper and pens.
+        </p>
+
+        <p>
+            It was about planting hope.
+        </p>
+
+        <p>
+            It was about showing children that someone believed in their
+            future.
+        </p>
+
+        <p>
+            And most importantly, it was an opportunity to tell them
+            about the love of Jesus.
+        </p>
+
+        <p>
+            I wanted them to understand something very simple:
+        </p>
+
+        <p>
+            <strong>Jesus loves them.</strong>
+        </p>
+
+        <p>
+            And I wanted them to see that love is not something we keep
+            only inside our hearts.
+        </p>
+
+        <p>
+            You cannot truly love without giving.
+        </p>
+
+        <p>
+            When we give our time, we give love.
+        </p>
+
+        <p>
+            When we give our resources, we give love.
+        </p>
+
+    </div><div class="page-number">60</div></div></section><section class="face back" aria-label="Page 61"><div class="page-content"><div>
+
+        <p>
+            When we listen to someone, we give love.
+        </p>
+
+        <p>
+            When we serve someone in need, we give love.
+        </p>
+
+        <p>
+            And when we give without expecting anything in return, we
+            begin to understand what Christian charity truly means.
+        </p>
+
+        <p>
+            Charity is another expression of love.
+        </p>
+
+        <p>
+            Through that mission, God taught me that His provision is not
+            only about what we receive.
+        </p>
+
+        <p>
+            Sometimes, His greatest provision is the opportunity to become
+            an instrument through which His love can reach others.
+        </p>
+
+        <p>
+            I was beginning to understand that the mission God was
+            building in my life was not about me.
+        </p>
+
+        <p>
+            It was about Him.
+        </p>
+
+        <p>
+            <strong>He provides.</strong>
+        </p>
+
+        <p>
+            <strong>We receive.</strong>
+        </p>
+
+        <p>
+            <strong>We share.</strong>
+        </p>
+
+        <p>
+            And through our sharing, others encounter His love.
+        </p>
+
+        <P>
+            Philippians 4:19  
+        </P>
+           
+        <P>
+             "And my God will supply every need of yours 
+            according to his riches in glory in Christ Jesus."
+        </P>
+
+    </div><div class="page-number">61</div></div></section></div>
+<div class="sheet" data-sheet="31"><section class="face front" aria-label="Page 62"><div class="page-content"><div>
+
+        <h3>CHAPTER X</h3>
+
+        <h2>THE STREET DWELLERS</h2>
+
+        <p>
+            I remember the people we often see on the streets.
+        </p>
+
+        <p>
+            Some were homeless. Some were simply searching for whatever
+            they could find to eat. Others were selling small things or
+            doing simple jobs just to earn a little money for the day.
+        </p>
+
+        <p>
+            I began thinking about them.
+        </p>
+
+        <p>
+            I planned another activity—to go around the city and look
+            for people who could receive the food packs we had prepared
+            for them.
+        </p>
+
+        <p>
+            As we traveled through the streets, I encountered many
+            people who were struggling to survive. Most of those I met
+            were senior citizens.
+        </p>
+
+        <p>
+            They were braving the heat of the sun, walking along the
+            streets and looking for something they could do to earn money
+            and bring food home to their families.
+        </p>
+
+    </div><div class="page-number">62</div></div></section><section class="face back" aria-label="Page 63"><div class="page-content"><div>
+
+        <p>
+            What touched me deeply was that many of them were not thinking
+            primarily about themselves.
+        </p>
+
+        <p>
+            They were thinking about their families.
+        </p>
+
+        <p>
+            When I asked them about their lives and their needs, I could
+            feel how much they wanted to provide for the people they loved.
+        </p>
+
+        <p>
+            For someone who has very little, a simple food pack can mean
+            something very big.
+        </p>
+
+        <p>
+            It can mean that someone remembers them.
+        </p>
+
+        <p>
+            It can mean that someone cares.
+        </p>
+
+        <p>
+            It can mean that they do not have to face their struggle
+            completely alone.
+        </p>
+
+        <p>
+            As I gave them the food packs, I told them:
+        </p>
+
+        <p>
+            <strong>“God loves you.”</strong>
+        </p>
+
+        <p>
+            Those three words were as important to me as the food I was
+            giving them.
+        </p>
+
+        <p>
+            I wanted them to feel the love of Christ—not only through
+            what they received in their hands, but also through the
+            compassion we shared with them.
+        </p>
+
+    </div><div class="page-number">63</div></div></section></div>
+<div class="sheet" data-sheet="32"><section class="face front" aria-label="Page 64"><div class="page-content"><div>
+
+        <p>
+            This was becoming clearer to me:
+        </p>
+
+        <p>
+            <strong>Bringing people closer to God was part of my mission.</strong>
+        </p>
+
+        <p>
+            I wanted to plant a seed of hope in their hearts—a simple
+            reminder that God remembers them.
+        </p>
+
+        <p>
+            Perhaps there would come a day when life would become even
+            harder. Perhaps they would again find themselves hungry,
+            alone, or without anyone to turn to.
+        </p>
+
+        <p>
+            But I prayed that they would remember that moment.
+        </p>
+
+        <p>
+            That somewhere along the streets of Bacolod, someone had
+            stopped and told them:
+        </p>
+
+        <p>
+            <strong>“God loves you.”</strong>
+        </p>
+
+        <p>
+            And perhaps, when that difficult day comes, those words would
+            lead them to seek the presence of Jesus.
+        </p>
+
+        <p>
+            Maybe they would remember the path where they encountered love.
+        </p>
+
+        <p>
+            The path where someone listened.
+        </p>
+
+        <p>
+            The path where someone cared.
+        </p>
+
+        <p>
+            The path where they met Christ.
+        </p>
+
+    </div><div class="page-number">64</div></div></section><section class="face back" aria-label="Page 65"><div class="page-content"><div>
+
+        <p>
+            I realized that I could help provide food for that particular
+            moment through God's blessing, but God was offering something
+            much greater.
+        </p>
+
+        <p>
+            He was preparing a place for His people—not only a place of
+            comfort here on Earth, but the promise of eternal life with Him.
+        </p>
+
+        <p>
+            Our journey in this world is temporary.
+        </p>
+
+        <p>
+            We work.
+        </p>
+
+        <p>
+            We struggle.
+        </p>
+
+        <p>
+            We become tired.
+        </p>
+
+        <p>
+            We search for food.
+        </p>
+
+        <p>
+            We provide for our families.
+        </p>
+
+        <p>
+            We experience suffering and uncertainty.
+        </p>
+
+        <p>
+            But beyond this earthly journey, God calls us toward
+            something eternal.
+        </p>
+
+        <p>
+            That is why I believe we must follow the path of love where
+            Jesus leads us.
+        </p>
+
+    </div><div class="page-number">65</div></div></section></div>
+<div class="sheet" data-sheet="33"><section class="face front" aria-label="Page 66"><div class="page-content"><div>
+
+        <p>
+            When we allow His presence to guide our lives, His Kingdom
+            begins to become visible even here on Earth—not because this
+            world is already perfect, but because His love can be revealed
+            through those who choose to serve.
+        </p>
+
+        <p>
+            I saw it in the faces of the people we helped.
+        </p>
+
+        <p>
+            I saw it in the generosity of the Sharers who supported the
+            mission.
+        </p>
+
+        <p>
+            I saw it in the willingness of friends to serve.
+        </p>
+
+        <p>
+            And I saw it in the opportunity God gave me to become His
+            instrument.
+        </p>
+
+        <p>
+            The food packs would eventually be consumed.
+        </p>
+
+        <p>
+            The money would eventually be spent.
+        </p>
+
+        <p>
+            The day would eventually come to an end.
+        </p>
+
+        <p>
+            But I prayed that the seed of hope would remain.
+        </p>
+
+        <p>
+            Because when we give food, we feed the body.
+        </p>
+
+        <p>
+            When we give hope, we strengthen the heart.
+        </p>
+
+    </div><div class="page-number">66</div></div></section><section class="face back" aria-label="Page 67"><div class="page-content"><div>
+
+        <p>
+            And when we lead someone toward Jesus, we help them discover
+            the One who gives life.
+        </p>
+
+        <p>
+            <strong>Love because God is love.</strong>
+        </p>
+
+        <p>
+            And wherever there is genuine love, compassion, and service,
+            we can become witnesses of His presence.
+        </p>
+
+        <p>
+            The journey was continuing.
+        </p>
+
+        <p>
+            And I was beginning to understand that The Traveling Messiah
+            was not simply about traveling from one place to another.
+        </p>
+
+        <p>
+            It was about bringing the love of Christ wherever people were
+            waiting to encounter Him.
+        </p>
+
+        <P>
+            Matthew 25:40
+        </P>
+
+        <P>
+            "And the King will answer them, 
+            'Truly, I say to you, 
+            as you did it to one of the least of these my brothers, 
+            you did it to me.'"  
+        </P>
+
+    </div><div class="page-number">67</div></div></section></div>
+<div class="sheet" data-sheet="34"><section class="face front" aria-label="Page 68"><div class="page-content"><div>
+
+        <h2>PART THREE</h2>
+
+        <h1>THE MISSION TAKES SHAPE</h1>
+
+        <p>11. I Am the Servant of God</p>
+
+        <p>12. The Journey Continues</p>
+
+    </div><div class="page-number">68</div></div></section><section class="face back" aria-label="Page 69"><div class="page-content"><div>
+
+        <h3>CHAPTER XI</h3>
+
+        <h2>I AM THE SERVANT OF GOD</h2>
+
+        <p>
+            Thank You, God,
+        </p>
+
+        <p>
+            For the gift of life.<br>
+            For the love You have given.<br>
+            For the salvation You offer.<br>
+            For the joy and peace You bring.<br>
+            For the wisdom and learning You have given me.<br>
+            For the fruits of the Holy Spirit.<br>
+            For the harvest we are blessed to witness.<br>
+            For the grace and blessings we receive.<br>
+            And most of all, for Your loving presence that journeys with me.
+        </p>
+
+        <p>
+            We are Christians—
+        </p>
+
+        <p>
+            <strong>Gifted to give.</strong>
+        </p>
+
+        <p>
+            Whatever gifts You have placed in our hands are not meant
+            only for ourselves. They are meant to become blessings to
+            others.
+        </p>
+
+        <p>
+            My prayer, Lord, is simple:
+        </p>
+
+        <p>
+            Always make me Your good and humble servant.
+        </p>
+
+    </div><div class="page-number">69</div></div></section></div>
+<div class="sheet" data-sheet="35"><section class="face front" aria-label="Page 70"><div class="page-content"><div>
+
+        <p>
+            Teach me to serve without seeking recognition.
+        </p>
+
+        <p>
+            Teach me to give without expecting anything in return.
+        </p>
+
+        <p>
+            Teach me to love without conditions.
+        </p>
+
+        <p>
+            Teach me to listen when You speak.
+        </p>
+
+        <p>
+            Teach me to follow wherever You lead.
+        </p>
+
+        <p>
+            You are <strong>The Traveling Messiah.</strong>
+        </p>
+
+        <p>
+            Use me, Lord, to fulfill Your mission here on Earth.
+        </p>
+
+        <p>
+            Let my life become an instrument of Your love.
+        </p>
+
+        <p>
+            Let my hands serve those who are in need.
+        </p>
+
+        <p>
+            Let my voice speak words of hope.
+        </p>
+
+        <p>
+            Let my feet walk toward those who are searching.
+        </p>
+
+        <p>
+            Let my heart remain open to those who are hurting.
+        </p>
+
+    </div><div class="page-number">70</div></div></section><section class="face back" aria-label="Page 71"><div class="page-content"><div>
+
+        <p>
+            And when I do not know where to go, guide my steps.
+        </p>
+
+        <p>
+            When I do not know what to say, speak through me.
+        </p>
+
+        <p>
+            When I feel weak, strengthen me.
+        </p>
+
+        <p>
+            When I become proud, humble me.
+        </p>
+
+        <p>
+            When I become discouraged, remind me of Your calling.
+        </p>
+
+        <p>
+            I do not ask to be great.
+        </p>
+
+        <p>
+            I only ask to be faithful.
+        </p>
+
+        <p>
+            I do not ask to be recognized.
+        </p>
+
+        <p>
+            I only ask to be useful in Your hands.
+        </p>
+
+        <p>
+            <strong>Speak to me, Lord.</strong>
+        </p>
+
+        <p>
+            <strong>Your servant is listening.</strong>
+        </p>
+
+        <P>
+            Luke 1:38
+        </P>
+
+        <P>
+            "And Mary said, 'Behold, I am the servant of the Lord; 
+            let it be to me according to your word.'"
+        </P>
+
+    </div><div class="page-number">71</div></div></section></div>
+<div class="sheet" data-sheet="36"><section class="face front" aria-label="Page 72"><div class="page-content"><div>
+
+        <h3>CHAPTER XII</h3>
+
+        <h2>THE JOURNEY CONTINUES</h2>
+
+        <p>
+            I am bound to travel from one place to another, creating an
+            impact on the lives of people and using the gifts and talents
+            God has bestowed upon me.
+        </p>
+
+        <p>
+            The charity and love I have been advocating as signs of God's
+            presence—the Traveling Messiah will fulfill them and will
+            continually journey to reach those in the peripheries and in
+            faraway places who desire God, praying for His helping hands
+            and His spiritual presence to come to them.
+        </p>
+
+        <p>
+            It started as a dream, realizing at the same time that it is
+            His Divine Plan.
+        </p>
+
+        <p>
+            As I myself witness the amazing grace and blessings unfolding
+            in front of me, it is more than a miracle. God really speaks
+            to me in ways I could not imagine were true. Realistically,
+            it is happening, and I have gone a long way doing this
+            missionary work.
+        </p>
+
+    </div><div class="page-number">72</div></div></section><section class="face back" aria-label="Page 73"><div class="page-content"><div>
+
+        <p>
+            I am just waiting for God's provisions.
+        </p>
+
+        <p>
+            I cannot do this alone.
+        </p>
+
+        <p>
+            I cannot afford to have a traveling van like the prototype
+            I designed, the scooter that God showed me and inspired me
+            to use as a symbolic icon for the 2TM Project, the technologies
+            I need, and the funds to start this dream.
+        </p>
+
+        <p>
+            It is His plan.
+        </p>
+
+        <p>
+            And when that time truly comes, it will be a journey where
+            The Traveling Messiah becomes alive in the spirit of who He
+            truly is, and where we discover what the next revelation will
+            be and what we are called to act upon in line with it.
+        </p>
+
+        <p>
+            God speaks to me.
+        </p>
+
+        <p>
+            It is He who prompted me to make this a reality.
+        </p>
+
+        <p>
+            I simply follow and obey His will.
+        </p>
+
+        <p>
+            <strong>The Traveling Messiah.</strong>
+        </p>
+
+         <P>
+            Isaiah 43:18–19
+        </P>
+
+        <P>
+            "Remember not the former things, 
+            nor consider the things of old.
+            Behold, I am doing a new thing; now it springs forth, 
+            do you not perceive it? 
+            I will make a way in the wilderness and rivers in the desert."
+        </P>
+
+    </div><div class="page-number">73</div></div></section></div>
+<div class="sheet" data-sheet="37"><section class="face front" aria-label="Page 74"><div class="page-content"><div>
+
+        <h2>PART FOUR</h2>
+
+        <h1>CLOSING PAGES</h1>
+
+        <p>13. ABOUT THE AUTHOR</p>
+
+        <p>14. THE TRAVELING MESSIAH MISSION</p>
+
+        <p>15. FINAL PRAYER</p>
+
+    </div><div class="page-number">74</div></div></section><section class="face back" aria-label="Page 75"><div class="page-content"><div>
+
+        <h3>CHAPTER XIII</h3>
+
+        <h2>ABOUT THE AUTHOR</h2>
+
+        <p>
+            Resty Suela is a Missionary of Faith and the person behind
+            The Traveling Messiah.
+        </p>
+
+        <p>
+            His journey has been shaped by faith, service, prayer,
+            teaching, work, and the desire to bring Christ closer to
+            people in their everyday lives.
+        </p>
+
+        <p>
+            Throughout his journey, Resty discovered that God can use
+            ordinary people, ordinary work, and simple acts of love to
+            accomplish something greater.
+        </p>
+
+        <p>
+            Through charity, teaching, music, writing, social media,
+            and missionary activities, he continues to use the gifts
+            and talents God has given him in service of others.
+        </p>
+
+        <p>
+            He believes that being a Christian means being
+            <strong>gifted to love.</strong>
+        </p>
+
+        <p>
+            The Traveling Messiah is not simply a project. It is a
+            continuing journey of faith—a response to what Resty
+            believes God has called him to do.
+        </p>
+
+        <p>
+            <strong>
+                “I am His servant.<br>
+                The journey continues.”
+            </strong>
+        </p>
+
+        <P>
+            1 Corinthians 15:10
+        </P>
+
+        <P>
+            "But by the grace of God I am what I am, 
+            and his grace toward me was not in vain."
+        </P>
+
+    </div><div class="page-number">75</div></div></section></div>
+<div class="sheet" data-sheet="38"><section class="face front" aria-label="Page 76"><div class="page-content"><div>
+
+        <h3>CHAPTER XIV</h3>
+
+        <h2>THE TRAVELING MESSIAH MISSION</h2>
+
+        <p>
+            The mission of The Traveling Messiah is to fulfill God's
+            promises to His people as we faithfully wait and follow
+            His will.
+        </p>
+
+        <p>
+            We draw the image of God to the whole world.
+        </p>
+
+        <p>
+            As the Body of Christ, the Church, we are called to continue
+            His presence and mission among His people.
+        </p>
+
+        <p>
+            Like Mary, His Mother, who never left Him throughout His life,
+            we remain faithful and close to Christ as we journey with Him.
+        </p>
+
+        <p>
+            <strong>We are The Traveling Messiah.</strong>
+        </p>
+
+        <p>
+            As I journey, may I give glory to God, knowing that He keeps
+            me always under His care.
+        </p>
+
+        <p>
+            <strong>This is His Mission.</strong>
+        </p>
+
+        <p>
+            I simply follow His will.
+        </p>
+
+        <P>
+            Acts 1:8
+        </P>
+
+        <P>
+            "But you will receive power 
+            when the Holy Spirit has come upon you, 
+            and you will be my witnesses in Jerusalem 
+            and in all Judea and Samaria, and to the end of the earth."
+        </P>
+
+    </div><div class="page-number">76</div></div></section><section class="face back" aria-label="Page 77"><div class="page-content"><div>
+
+        <h3>CHAPTER XV</h3>
+
+        <h2>FINAL PRAYER</h2>
+
+         <p>
+             The God of the Universe,
+             Who created the cosmos and all living things,
+             Who made us in Your image and likeness,
+             Who called us to obey and follow You,
+        </p>    
+         
+         <p>
+             A grace that leads us into Your Heavenly Kingdom,
+             The promise of Eternal Life,
+             A gift freely given,
+             Sealed with Love,
+        </p>
+             
+         <p>
+            A communion of peace and harmony,
+             Your original plan for humanity,
+             That Satan sought to disrupt.
+        </p> 
+             
+         <p>
+            Here You are, Lord Jesus,
+             Making us more than conquerors,
+             Victorious and triumphant against the temptations of the evil forces,
+             Like a warrior who stood to fight,
+             A light that darkness cannot consume,
+             A courageous spirit that lives for eternity.
+        </P>
+            
+         <p>  
+            Keep us, Your Christians, O God,
+             In Your bosom and protection.
+             My own family, loved ones, and friends,
+             I entrust them to Your care
+        </P>  
+            
+         <p>
+            As I embark on the journey
+             Of The Traveling Messiah.
+             May Your face shine upon me,
+             And may Your glory touch the hearts of humanity.
+        </p>
+
+         <p>
+              Amen.
+        </p>
+
+        <P>
+            Psalm 19:14
+        </P>
+
+        <P>
+            "Let the words of my mouth 
+            and the meditation of my heart 
+            be acceptable in your sight, 
+            O Lord, my rock and my redeemer."
+        </P>
+
+    </div><div class="page-number">77</div></div></section></div></main>
+  </section>
+  <nav class="controls" aria-label="Book navigation">
+    <button id="previousButton" type="button" aria-label="Previous page">&#8592; Previous</button>
+    <span class="progress" id="pageStatus" aria-live="polite"></span>
+    <button id="nextButton" type="button" aria-label="Next page">Next &#8594;</button>
+    <p class="hint">Turn the front cover, then read pages 1 and 2 as a spread. Use buttons, arrow keys, or swipe.</p>
+  </nav>
+</div>
+<script>
+(function(){
+  'use strict';
+  var book=document.getElementById('book');
+  var sheets=Array.prototype.slice.call(book.querySelectorAll('.sheet'));
+  var previousButton=document.getElementById('previousButton');
+  var nextButton=document.getElementById('nextButton');
+  var pageStatus=document.getElementById('pageStatus');
+  var position=0,busy=false,touchStartX=0;
+  var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var duration=reduced?30:930;
+
+  function restack(){
+    for(var i=0;i<sheets.length;i++){
+      var turned=i<position;
+      sheets[i].classList.toggle('turned',turned);
+      sheets[i].style.zIndex=turned?String(i+1):String(sheets.length-i+10);
+    }
+    book.classList.toggle('closed',position===0);
+  }
+  function status(){
+    if(position===0){pageStatus.textContent='Front cover';}
+    else if(position>=sheets.length){pageStatus.textContent='End of book';}
+    else{var left=position*2-1;pageStatus.textContent='Pages '+left+' and '+(left+1);}
+    previousButton.disabled=position===0||busy;
+    nextButton.disabled=position>=sheets.length||busy;
+    document.title='The Traveling Messiah - '+pageStatus.textContent;
+  }
+  function go(next){
+    if(busy||next<0||next>sheets.length||next===position)return;
+    busy=true;
+    var forward=next>position;
+    var leaf=forward?sheets[position]:sheets[position-1];
+    leaf.style.zIndex=String(sheets.length+100);
+    if(forward)leaf.classList.add('turned');else leaf.classList.remove('turned');
+    position=next;
+    book.classList.toggle('closed',position===0);
+    status();
+    window.setTimeout(function(){busy=false;restack();status();},duration);
+  }
+  previousButton.addEventListener('click',function(){go(position-1)});
+  nextButton.addEventListener('click',function(){go(position+1)});
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='PageDown')go(position+1);if(e.key==='ArrowLeft'||e.key==='PageUp')go(position-1);if(e.key==='Home')go(0);if(e.key==='End')go(sheets.length)});
+  book.addEventListener('touchstart',function(e){touchStartX=e.changedTouches[0].clientX},{passive:true});
+  book.addEventListener('touchend',function(e){var d=e.changedTouches[0].clientX-touchStartX;if(Math.abs(d)>55)go(position+(d<0?1:-1))},{passive:true});
+  restack();status();
+})();
+</script>
+</body>
+</html>
