@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>The Traveling Messiah — Resty Suela</title>
+<meta name="description" content="The Traveling Messiah — a missionary's memoir of faith and service, by Resty Suela. An interactive flip-page ebook." />
+
+<!-- Vendored StPageFlip library (MIT) — works fully offline / on GitHub Pages -->
+<script src="js/page-flip.browser.min.js"></script>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div id="loading-screen">
+    <div class="loading-inner">
+      <div class="loading-title">The&nbsp;Traveling&nbsp;Messiah</div>
+      <div class="spinner"></div>
+      <div class="loading-text" id="loading-text">Opening the book…</div>
+    </div>
+  </div>
+
+  <header id="top-bar">
+    <div class="top-bar-title">
+      <span class="title-main">The Traveling Messiah</span>
+      <span class="title-sub">by Resty Suela</span>
+    </div>
+    <div class="top-bar-actions">
+      <button id="btn-toc" title="Table of contents" aria-label="Table of contents">&#9776;</button>
+      <button id="btn-fullscreen" title="Fullscreen" aria-label="Fullscreen">&#10021;</button>
+    </div>
+  </header>
+
+  <main id="stage">
+    <button id="btn-prev" class="nav-arrow nav-prev" aria-label="Previous page">&#10094;</button>
+
+    <div id="book-wrapper">
+      <div id="book"></div>
+    </div>
+
+    <button id="btn-next" class="nav-arrow nav-next" aria-label="Next page">&#10095;</button>
+  </main>
+
+  <footer id="bottom-bar">
+    <button id="btn-first" title="First page">&#8676;</button>
+    <button id="btn-prev-2" title="Previous page">&#8592;</button>
+    <div class="page-indicator">
+      <span id="page-current">1</span> / <span id="page-total">1</span>
+    </div>
+    <input id="page-slider" type="range" min="0" max="1" value="0" step="1" aria-label="Jump to page" />
+    <button id="btn-next-2" title="Next page">&#8594;</button>
+    <button id="btn-last" title="Last page">&#8677;</button>
+  </footer>
+
+  <nav id="toc-panel" aria-hidden="true">
+    <div class="toc-header">
+      <span>Table of Contents</span>
+      <button id="btn-toc-close" aria-label="Close">&times;</button>
+    </div>
+    <ul id="toc-list"></ul>
+  </nav>
+  <div id="toc-overlay"></div>
+
+  <div id="hint" class="hint">Tap the edge of a page — or drag its corner — to turn it</div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
