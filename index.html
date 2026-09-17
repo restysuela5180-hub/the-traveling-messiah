@@ -381,6 +381,26 @@
     position: relative;
 }
 
+/* PRODUCT IMAGES */
+.product-image {
+    width: 100%;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #f5f2ea;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
 .product-price {
     font-size: 1.4rem;
     font-weight: bold;
@@ -1139,6 +1159,7 @@ const products = [
 
 ];
 
+
 let cart = [];
 
 
@@ -1212,7 +1233,7 @@ function displayProducts() {
             <div class="card">
 
                 <div class="product-image">
-                      <img src="${product.image}" alt="${product.name}">
+                    <img src="${product.image}" alt="${product.name}">
                 </div>
 
                 <h3>
