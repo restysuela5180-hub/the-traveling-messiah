@@ -1080,13 +1080,15 @@ const products = [
     {
         name: "The Traveling Messiah eBook",
         price: 500,
-        type: "ebook"
+        type: "ebook",
+        image: "products/ebook.png"
     },
 
     {
         name: "2TM T-Shirt",
         price: 350,
         type: "clothing",
+        image: "products/tshirt.png",
         colors: [
             "Blue",
             "White",
@@ -1106,6 +1108,7 @@ const products = [
         name: "2TM Jacket",
         price: 470,
         type: "clothing",
+        image: "products/jacket.png",
         colors: [
             "Blue",
             "White",
@@ -1125,6 +1128,7 @@ const products = [
         name: "2TM Hat",
         price: 250,
         type: "hat",
+        image: "products/hat.png",
         colors: [
             "Blue",
             "White",
@@ -1134,7 +1138,6 @@ const products = [
     }
 
 ];
-
 
 let cart = [];
 
@@ -1208,8 +1211,8 @@ function displayProducts() {
 
             <div class="card">
 
-                <div class="card-icon">
-                    🛍️
+                <div class="product-image">
+                      <img src="${product.image}" alt="${product.name}">
                 </div>
 
                 <h3>
