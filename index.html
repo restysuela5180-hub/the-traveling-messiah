@@ -86,6 +86,32 @@
 
 
         /* =========================
+           DONATION NAVIGATION BUTTON
+        ========================= */
+
+        .nav-donate {
+            display: inline-block;
+            padding: 10px 18px;
+            border-radius: 22px;
+            background: #c9a85c;
+            color: #151515 !important;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: bold;
+            white-space: nowrap;
+            transition: 0.3s;
+            border: 2px solid #c9a85c;
+        }
+
+        .nav-donate:hover {
+            background: white;
+            border-color: white;
+            color: #151515 !important;
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================
            HERO
         ========================= */
 
@@ -468,71 +494,93 @@
     margin-top: 25px;
 }
 
-<!-- =========================
-     2TM DONATION BOX
-========================= -->
 
-<section id="support" class="support-section">
 
-    <h2>Support The Mission</h2>
 
-    <p class="support-intro">
-        The Traveling Messiah Project is a non-profit mission initiative.
-        Your support helps us continue our future activities of faith,
-        service, and discipleship.
-    </p>
+/* =========================
+   2TM DONATION BOX
+========================= */
 
-    <div class="donation-box">
+.donation-box {
+    max-width: 780px;
+    margin: 35px auto 0;
+    padding: 35px 30px;
+    background: linear-gradient(145deg, #151515, #242424);
+    color: white;
+    border: 2px solid #c9a85c;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.18);
+    text-align: center;
+}
 
-        <div class="donation-cross">✝</div>
+.donation-cross {
+    font-size: 2.4rem;
+    color: #c9a85c;
+    margin-bottom: 8px;
+}
 
-        <h3>Support the 2TM Mission</h3>
+.donation-box h3 {
+    color: white;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
 
-        <p>
-            If you would like to help The Traveling Messiah Project,
-            your donation will help support future mission activities,
-            outreach, and the continuation of this project.
-        </p>
+.donation-box p {
+    max-width: 650px;
+    margin: 0 auto 18px;
+}
 
-        <p class="donation-message">
-            <strong>
-                This is a non-profit website.
-            </strong><br>
-            All proceeds will be used to help keep our future activities
-            going and support the mission.
-        </p>
+.donation-message {
+    padding: 16px;
+    margin: 22px auto;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.07);
+}
 
-        <div class="donation-details">
+.donation-details {
+    margin-top: 25px;
+}
 
-            <h4>DONATION</h4>
+.donation-details h4 {
+    color: #c9a85c;
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+}
 
-            <p>
-                You may support the mission through the donation methods
-                provided below.
-            </p>
+.donation-method {
+    max-width: 560px;
+    margin: 14px auto;
+    padding: 15px 18px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(201,168,92,0.35);
+    border-radius: 10px;
+}
 
-            <!-- ADD YOUR ACTUAL PAYMENT DETAILS HERE -->
+.donation-method strong {
+    color: #c9a85c;
+}
 
-            <div class="donation-method">
-                <strong>Bank / E-Banking</strong>
-                <p>Details will be provided here.</p>
-            </div>
+.donation-method p {
+    margin: 5px auto 0;
+    color: #ddd;
+}
 
-            <div class="donation-method">
-                <strong>Cash Transfer</strong>
-                <p>Details will be provided here.</p>
-            </div>
+.thank-you {
+    margin-top: 25px !important;
+    color: #ddd;
+    font-style: italic;
+}
 
-        </div>
+@media (max-width: 800px) {
+    .donation-box {
+        padding: 28px 20px;
+    }
 
-        <p class="thank-you">
-            Thank you for supporting the mission. 🙏
-        </p>
-
-    </div>
-
-</section>
-
+    .donation-box h3 {
+        font-size: 1.5rem;
+    }
+}
 
         /* =========================
            MOBILE
@@ -589,7 +637,6 @@
 }
 
     </style>
-    
 </head>
 
 
@@ -635,6 +682,11 @@
             </li>
 
         </ul>
+
+        <!-- =========================
+             DONATION BUTTON
+        ========================= -->
+        <a href="#support" class="nav-donate">DONATE</a>
 
     </nav>
 
@@ -1058,7 +1110,7 @@
      SUPPORT
 ========================= -->
 
-<section class="support">
+<section class="support" id="support">
 
     <div class="container">
 
@@ -1067,6 +1119,57 @@
             <h2>Be Part of the Journey</h2>
 
         </div>
+
+
+
+
+<!-- =========================
+     2TM DONATION BOX
+========================= -->
+
+<div class="donation-box">
+
+    <div class="donation-cross">✝</div>
+
+    <h3>Support the 2TM Mission</h3>
+
+    <p>
+        If you would like to support The Traveling Messiah Project,
+        your contribution can help us continue future mission activities,
+        outreach, and the work of the project.
+    </p>
+
+    <p class="donation-message">
+        <strong>This is a non-profit website.</strong><br>
+        Support is used to help keep future 2TM activities and mission projects going.
+    </p>
+
+    <div class="donation-details">
+
+        <h4>DONATION</h4>
+
+        <p>
+            Donation methods will be listed here once the official
+            payment details are ready.
+        </p>
+
+        <div class="donation-method">
+            <strong>Bank / E-Banking</strong>
+            <p>Official details will be added here.</p>
+        </div>
+
+        <div class="donation-method">
+            <strong>Cash Transfer</strong>
+            <p>Official details will be added here.</p>
+        </div>
+
+    </div>
+
+    <p class="thank-you">
+        Thank you for supporting the mission. 🙏
+    </p>
+
+</div>
 
 
         <div class="support-content">
@@ -1167,14 +1270,14 @@ const products = [
         name: "The Traveling Messiah eBook",
         price: 500,
         type: "ebook",
-        image: "ebook.png"
+        image: "products/ebook.png"
     },
 
     {
         name: "2TM T-Shirt",
         price: 350,
         type: "clothing",
-        image: "tshirt.png",
+        image: "products/tshirt.png",
         colors: [
             "Blue",
             "White",
@@ -1194,7 +1297,7 @@ const products = [
         name: "2TM Jacket",
         price: 470,
         type: "clothing",
-        image: "jacket.png",
+        image: "products/jacket.png",
         colors: [
             "Blue",
             "White",
@@ -1214,7 +1317,7 @@ const products = [
         name: "2TM Hat",
         price: 250,
         type: "hat",
-        image: "hat.png",
+        image: "products/hat.png",
         colors: [
             "Blue",
             "White",
@@ -1519,6 +1622,7 @@ function checkout() {
     );
 
 }
+
 
 /* =========================
    START STORE
