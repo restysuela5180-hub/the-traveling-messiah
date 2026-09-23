@@ -668,6 +668,26 @@
     text-align: center;
 }
 
+/* =========================
+   2TM CHECKOUT
+========================= */
+.checkout-panel{display:none;max-width:800px;margin:30px auto 0;padding:30px;background:white;border-radius:12px;box-shadow:0 5px 20px rgba(0,0,0,.08)}
+.checkout-panel h3{margin-bottom:20px;font-size:1.7rem}
+.checkout-note{padding:15px;margin-bottom:22px;background:#f5f2ea;border-left:4px solid #c9a85c;border-radius:6px}
+.checkout-form{display:grid;gap:15px}
+.checkout-form label{display:block;font-weight:bold}
+.checkout-form input{width:100%;padding:12px;margin-top:5px;border:1px solid #ccc;border-radius:6px;font-family:inherit;font-size:1rem}
+.checkout-summary{margin-top:25px;padding:20px;background:#f5f2ea;border-radius:8px}
+.checkout-summary h4{margin-bottom:12px}
+.checkout-summary-item{padding:8px 0;border-bottom:1px solid #ddd}
+.checkout-summary-total{text-align:right;font-size:1.25rem;margin-top:15px}
+.pickup-address{margin-top:20px;padding:18px;background:#222;color:white;border-radius:8px}
+.pickup-address strong{color:#c9a85c}
+.checkout-buttons{display:flex;flex-wrap:wrap;justify-content:center;margin-top:25px}
+.btn-secondary{background:#555;color:white}
+.btn-secondary:hover{background:#333}
+@media(max-width:600px){.checkout-panel{padding:22px 16px}}
+
     </style>
 </head>
 
@@ -1027,6 +1047,64 @@
 
             </button>
 
+        </div>
+
+        <!-- =========================
+             2TM CHECKOUT PANEL
+        ========================= -->
+        <div class="checkout-panel" id="checkout-panel">
+            <h3>Checkout</h3>
+            <div class="checkout-note">
+                <strong>Delivery information:</strong><br>
+                Delivery is <strong>not included</strong> in the product total.
+                The customer is responsible for arranging and paying for their
+                preferred courier or motor taxi.
+            </div>
+            <form class="checkout-form" id="checkout-form" onsubmit="placeOrder(event)">
+                <div>
+                    <label for="customer-name">Name</label>
+                    <input type="text" id="customer-name" placeholder="Your full name" required>
+                </div>
+                <div>
+                    <label for="customer-mobile">Mobile Number</label>
+                    <input type="tel" id="customer-mobile" placeholder="Your mobile number" required>
+                </div>
+                <div>
+                    <label for="customer-email">Email</label>
+                    <input type="email" id="customer-email" placeholder="Your email address" required>
+                </div>
+                <div>
+                    <label for="courier-service">Preferred Courier / Motor Taxi</label>
+                    <input type="text" id="courier-service" placeholder="Example: Maxim, Grab, Toktok, etc." required>
+                </div>
+                <div class="pickup-address">
+                    <strong>SHOP PICKUP ADDRESS</strong><br><br>
+                    Blk 54 Lot 22 Easthomes 5,<br>
+                    Brgy Mansilingan,<br>
+                    Bacolod City, Negros Occidental,<br>
+                    Philippines 6100<br><br>
+                    Please give this address to your chosen courier or motor taxi for pickup.
+                </div>
+                <div class="checkout-summary">
+                    <h4>ORDER SUMMARY</h4>
+                    <div id="checkout-items"></div>
+                    <div class="checkout-summary-total">
+                        <strong>Product Total:</strong> ₱<span id="checkout-total">0</span>
+                    </div>
+                    <p style="margin-top:12px;">
+                        <strong>Delivery Fee:</strong> ₱0<br>
+                        <small>No delivery fee is collected by the 2TM website. Courier/motor-taxi charges are paid directly by the customer.</small>
+                    </p>
+                </div>
+                <div class="checkout-note">
+                    <strong>Payment:</strong><br>
+                    Your order details will be prepared first. Payment instructions can be provided after the order is confirmed.
+                </div>
+                <div class="checkout-buttons">
+                    <button type="submit" class="btn btn-primary">PLACE ORDER</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeCheckout()">BACK TO CART</button>
+                </div>
+            </form>
         </div>
 
     </div>
@@ -1658,22 +1736,80 @@ function removeFromCart(index) {
 ========================= */
 
 function checkout() {
-
     if (cart.length === 0) {
-
-        alert(
-            "Your cart is empty."
-        );
-
+        alert("Your cart is empty.");
         return;
-
     }
 
+    const checkoutPanel = document.getElementById("checkout-panel");
+    const checkoutItems = document.getElementById("checkout-items");
+    const checkoutTotal = document.getElementById("checkout-total");
+    let total = 0;
 
-    alert(
-        "Checkout system will be connected to the 2TM payment and order system."
+    checkoutItems.innerHTML = "";
+
+    cart.forEach((item) => {
+        total += item.price;
+        let details = "";
+        if (item.size) details += `Size: ${item.size}`;
+        if (item.color) details += (details ? " | " : "") + `Color: ${item.color}`;
+        checkoutItems.innerHTML += `
+            <div class="checkout-summary-item">
+                <strong>${item.name}</strong><br>
+                <small>${details}</small><br>
+                ₱${item.price}
+            </div>`;
+    });
+
+    checkoutTotal.innerText = total;
+    checkoutPanel.style.display = "block";
+    checkoutPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function closeCheckout() {
+    document.getElementById("checkout-panel").style.display = "none";
+    document.getElementById("store").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function placeOrder(event) {
+    event.preventDefault();
+    if (cart.length === 0) { alert("Your cart is empty."); return; }
+
+    const name = document.getElementById("customer-name").value.trim();
+    const mobile = document.getElementById("customer-mobile").value.trim();
+    const email = document.getElementById("customer-email").value.trim();
+    const courier = document.getElementById("courier-service").value.trim();
+    let total = 0;
+    let orderDetails = "";
+
+    cart.forEach((item, index) => {
+        total += item.price;
+        const details = [];
+        if (item.size) details.push(`Size: ${item.size}`);
+        if (item.color) details.push(`Color: ${item.color}`);
+        orderDetails += `${index + 1}. ${item.name} - PHP ${item.price}`;
+        if (details.length) orderDetails += ` (${details.join(", ")})`;
+        orderDetails += "\n";
+    });
+
+    const pickupAddress = "Blk 54 Lot 22 Easthomes 5, Brgy Mansilingan, Bacolod City, Negros Occidental, Philippines 6100";
+    const subject = encodeURIComponent("2TM Store Order - " + name);
+    const body = encodeURIComponent(
+        "THE TRAVELING MESSIAH - 2TM STORE ORDER\n\n" +
+        "CUSTOMER INFORMATION\n" +
+        "Name: " + name + "\n" +
+        "Mobile: " + mobile + "\n" +
+        "Email: " + email + "\n\n" +
+        "ORDER DETAILS\n" + orderDetails + "\n" +
+        "PRODUCT TOTAL: PHP " + total + "\n" +
+        "DELIVERY FEE: PHP 0\n\n" +
+        "PREFERRED COURIER / MOTOR TAXI\n" + courier + "\n\n" +
+        "SHOP PICKUP ADDRESS\n" + pickupAddress + "\n\n" +
+        "Delivery is arranged and paid for by the customer.\n" +
+        "Please confirm the order and payment instructions."
     );
 
+    window.location.href = "mailto:restysuela5180@gmail.com?subject=" + subject + "&body=" + body;
 }
 
 
